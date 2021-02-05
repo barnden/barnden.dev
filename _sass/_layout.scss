@@ -1,0 +1,146 @@
+.post-header {
+    text-align: center;
+
+    .post-title {
+        line-height: 1em;
+        margin-bottom: .5rem;
+    }
+}
+
+.site-header {
+    border-bottom: 1px solid $border-1;
+    border-top: 1px solid $border-1;
+
+    min-height: 3rem;
+    line-height: 2rem;
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: $spacing;
+}
+
+.site-title {
+    font-size: 1.2rem;
+    letter-spacing: -1px;
+    margin-bottom: 0;
+    float: left;
+
+    @include media-query(650px) { padding-right: 45px; }
+}
+
+.site-nav {
+    position: absolute;
+    top: 9px;
+    right: $spacing / 2;
+    background: $default-background;
+    border: 1px solid $border-1;
+    border-radius: 5px;
+    text-align: right;
+
+    .nav-trigger { display: none; }
+
+    .menu-icon {
+        float: right;
+        width: 36px;
+        height: 26px;
+        line-height: 0;
+        padding-top: 10px;
+        text-align: center;
+
+        > svg path { fill: $border-1 }
+    }
+
+    label[for="nav-trigger"] {
+        display: block;
+        float: right;
+        width: 36px;
+        height: 36px;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    input ~ .trigger {
+        clear: both;
+        display: none;
+    }
+
+    input:checked ~ .trigger {
+        display: block;
+        padding-bottom: 5px;
+    }
+
+    .page-link {
+        line-height: $line-height;
+        display: block;
+        padding: 5px 10px;
+    
+        // Gaps between nav items, but not on the last one
+        &:not(:last-child) {
+          margin-right: 0;
+        }
+        margin-left: 20px;
+    }
+
+    @media screen and (min-width: 800px) {
+        position: static;
+        float: right;
+        border: none;
+        background-color: inherit;
+
+        label[for="nav-trigger"] { display: none; }
+
+        .menu-icon { display: none; }
+
+        input ~ .trigger { display: block; }
+
+        .page-link {
+            display: inline;
+            padding: 0;
+
+            &:not(:last-child) { margin-right: 20px; }
+            margin-left: auto;
+        }
+    }
+}
+
+
+main {
+    padding-bottom: 10rem;
+    min-height: 100vh;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+
+    height: 6rem;
+    margin: 1rem 0;
+    width: 100%;
+    border-top: 1px solid $border-1;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0; margin: 0;
+
+    font-size: .85rem;
+
+    a { text-decoration: none; }
+
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+
+        text-align: center;
+
+        li {
+            padding: 0;
+            margin: 0 1.5rem;
+        }
+    }
+}

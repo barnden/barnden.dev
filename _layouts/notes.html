@@ -1,0 +1,47 @@
+---
+layout: page
+title: notes
+permalink: /notes/
+regenerate: true
+---
+
+{{ content }}
+
+{% assign collection = site.collections | where: "label", page.collection | first %}
+
+{% assign categories = "" %}
+{% assign all = collection.docs | map: "categories" %}
+{% for category in all %}
+{% assign t = category | join: "-" | append: "," %}
+{% assign categories = categories | append: t %}
+{% endfor %}
+
+{% assign categories = categories | split: "," | uniq | sort %}
+
+{% for category in categories %}
+{% assign cat = category | split: "-" %}
+{% if cat[1] %}
+{% assign posts = collection.docs | where: "categories", cat[0] | where: "categories", cat[1] | sort: "date" | reverse %}
+{% else %}
+{% assign posts = collection.docs | where: "categories", cat[0] | sort: "date" | reverse %}
+{% endif %}
+<h2 class="lead">
+    {% if page.capitalize_categories %}
+    {{ category | upcase }}
+    {% else %}
+    {{ category }}
+    {% endif %}
+</h2>
+<ul class="post-list">
+{% for note in posts %}
+    {%- assign date_format = "%-d %b. %y" -%}
+    <li>
+            <span class="post-meta">{{ note.date | date: date_format }}</span>
+            <a href="{{ note.url | relative_url }}" class="post-link">{{ note.title | escape }}</a>
+            {%- if site.show_excerpts -%}
+                {{ note.excerpt }}
+            {%- endif -%}
+        </li>
+{% endfor %}
+</ul>
+{% endfor %}

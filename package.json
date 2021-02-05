@@ -1,0 +1,17 @@
+{
+  "name": "barnden",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mathjax-full": "^3.1.2",
+    "mathjax-node-page": "^3.2.0",
+    "yargs": "^16.2.0"
+  }
+}

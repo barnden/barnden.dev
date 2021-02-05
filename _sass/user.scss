@@ -1,0 +1,154 @@
+#feature {
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        #curl-demo {
+            flex-basis: 100%;
+            border: 1px solid $border-1;
+        }
+        .description {
+            flex-basis: 100%;
+            text-align: center;
+            margin-top: 1em;
+
+            button {
+                margin-top: 1.5em;
+            }
+        }
+    }
+}
+
+.block {
+    border-left: 3px solid #648381;
+    padding: .5em 1em;
+    margin: 1em 0;
+    background: rgba(100,131,129,.2);
+
+    p:first-child {
+        &:before {
+            content: "Definition";
+            margin-right: .5rem;
+            font-weight: normal;
+        }
+
+        color: #648381;
+        font-weight: bold;
+    }
+
+    &.example {
+        border-left: 3px solid #d77a61;
+        background: rgba(215,122,97,.08);
+
+        p:first-child {
+            &:before {
+                content: "Example"
+            }
+    
+            color: #d77a61;
+        }
+    }
+}
+
+.center { text-align: center; }
+
+ul.post-list {
+    list-style-type: none;
+
+    li {
+        text-indent: -135px;
+        margin-left: 135px;
+
+        & > span {
+            position: relative;
+            display: inline-block;
+            text-align: right;
+            margin-right: 30px;
+            min-width: 100px;
+
+            &:after {
+                content: "—";
+                position: absolute;
+                right: -25px
+            }
+        }
+    }
+}
+
+h2.lead {
+    font-size: 1.3rem;
+    margin: 1em 0 0 0;
+}
+
+.mjpage__block {
+    display: block !important;
+    text-align: center;
+    margin: 1em 0;
+    position: relative;
+    text-indent: 0;
+    max-width: none;
+    max-height: none;
+    min-width: 0;
+    min-height: 0;
+    width: 100%;
+}
+
+.mjpage {
+    font-style: normal;
+    font-weight: normal;
+    line-height: normal;
+    font-size: 100%;
+    font-size-adjust: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    float: none;
+    direction: ltr;
+    border: 0;
+    padding: 0;
+}
+
+.dateModified {
+    display: block;
+    font-size: .7em;
+}
+
+.site-title { text-decoration: none; }
+
+.breadcrumbs {
+    margin: 1em auto;
+    font-size: .85rem;
+
+    & a {
+        display: inline-block;
+        text-overflow: ellipsis;
+        max-width: 350px;
+        overflow: hidden;
+        white-space: nowrap;
+        margin-bottom: -1ex;
+    }
+}
+
+figcaption {
+    text-align: center;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+ul.pagination {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    list-style-type: none;
+
+    & li {
+        flex: 0;
+        margin: 0 1em;
+    }
+}

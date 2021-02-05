@@ -1,0 +1,70 @@
+---
+---
+.colors {
+    .palette {
+        width: 300px;
+        height: 300px;
+        border: 1px solid #363642;
+        margin: 1em auto 2em auto;
+        position: relative;
+        transition: background .5s;
+
+        #hex {
+            display: block;
+            margin: .5em;
+
+            &:after {
+                content: "#16161d"
+            }
+        }
+
+        figcaption {
+            position: absolute;
+            bottom: -2em;
+            left: 0; right: 0;
+            max-width: 100%;
+
+            em:before { content: "(which happens to be the background)" }
+        }
+    }
+
+    b:first-child:after { content: "eigengrau"; }
+    blockquote {
+        b:first-child:after { content: "Eigengrau"; }
+        em:after { content: " is the uniform dark gray background that many people report seeing in the absense of light."; }
+    }
+
+    .verdigris { display: none }
+    .eigengrau { display: block }
+
+    &:hover {
+        .palette {
+            background: #2F8C7F;
+            transition: background .5s;
+        }
+
+        #hex:after {
+            content: "#2F8C7F";
+        }
+
+        b:first-child:after { content: "verdigris"; }
+
+        blockquote {
+            b:first-child:after { content: "Verdigris"; }
+            em:after { content: " is the name for the natural patina formed when copper is weathered and exposed to air or seawater over time."; }
+        }
+
+        .verdigris {
+            display: inline-block;
+            &:before { content: "Verdigris: " }
+        }
+        .eigengrau {
+            display: block;
+            &:before { content: "Eigengrau: " }
+        }
+
+        figcaption em:before { content: "(which happens to not be the background)" }
+    }
+}
+
+blockquote { max-width: 80%; margin: 0 auto; }
