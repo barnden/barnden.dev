@@ -33,15 +33,18 @@ regenerate: true
     {% endif %}
 </h2>
 <ul class="post-list">
+
+{%- assign date_format = "%-d %b. %y" -%}
 {% for note in posts %}
-    {%- assign date_format = "%-d %b. %y" -%}
-    <li>
+    {% unless note.hidden %}
+        <li>
             <span class="post-meta">{{ note.date | date: date_format }}</span>
             <a href="{{ note.url | relative_url }}" class="post-link">{{ note.title | escape }}</a>
             {%- if site.show_excerpts -%}
                 {{ note.excerpt }}
             {%- endif -%}
         </li>
+    {% endunless %}
 {% endfor %}
 </ul>
 {% endfor %}

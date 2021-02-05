@@ -118,17 +118,17 @@ table {
     border: 1px solid rgba(255,255,255,.35);
 
     tr {
-        &:nth-child(even) { background: rgba(255,255,255,.075) }
-        &:hover { background: rgba(255,255,255,.125) }
+        &:nth-child(even) { background: rgba(255,255,255,.05) }
+        &:hover { background: rgba(255,255,255,.1) }
     }
 
     th, td {
         padding: .3rem .5rem;
-        border: 1px solid rgba(255,255,255,.35);
+        border: 1px solid rgba(255,255,255,.3);
     }
 
     th {
-        border-bottom: 3px solid rgba(255,255,255,.35);
+        border-bottom: 3px solid rgba(255,255,255,.3);
         text-align: center;
     }
 
