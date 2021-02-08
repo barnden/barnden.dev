@@ -22,32 +22,49 @@
 }
 
 .block {
-    border-left: 3px solid #648381;
-    padding: .5em 1em;
-    margin: 1em 0;
-    background: rgba(100,131,129,.2);
+    padding: .5em .75em;
+    margin: 1.25em 0;
 
-    p:first-child {
-        &:before {
-            content: "Definition";
-            margin-right: .5rem;
-            font-weight: normal;
-        }
+    &.remark p:first-child:before { content: "Remark" }
 
-        color: #648381;
+    & p:first-child {
         font-weight: bold;
+
+        &:before {
+            font-weight: normal;
+            margin-right: .5rem;
+        }
+    }
+
+    &.remark {
+        border: 1px solid rgba(117,113,94,.3);
+        border-left: 3px solid #75715E;
+        background: rgba(117,113,94,.04);
+
+        p:first-child { color: #75715E }
+    }
+
+    &.definition {
+        border: 1px solid rgba(100,131,129,.3);
+        border-left: 3px solid #648381;
+        background: rgba(100,131,129,.04);
+
+        p:first-child {
+            &:before { content: "Definition" }
+
+            color: #648381
+        }
     }
 
     &.example {
+        border: 1px solid rgba(215,122,97,.2);
         border-left: 3px solid #d77a61;
-        background: rgba(215,122,97,.08);
+        background: rgba(215,122,97,.02);
 
         p:first-child {
-            &:before {
-                content: "Example"
-            }
+            &:before { content: "Example" }
     
-            color: #d77a61;
+            color: #d77a61
         }
     }
 }
