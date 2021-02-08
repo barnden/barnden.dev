@@ -14,7 +14,7 @@ collections:
     label: "notes"
   courses:
     output: true
-    permalink: /:collection/:categories/:year/:month/:day/:title
+    permalink: /:collection/:categories/:title
     label: "courses"
 
 # Build settings

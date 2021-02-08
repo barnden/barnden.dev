@@ -1,14 +1,17 @@
 ---
 layout: notes
 regenerate: true
-title: Spring 2021
+title: MATH 325
 collection: courses
 semester: spring21
-permalink: /courses/2021/spring.html
+permalink: /courses/math/325
 upcase: true
+restrict: "math-325"
+label: false
 ---
 <div class="breadcrumbs">
     <a href="/">home</a>
     / <a href="/notes">notes</a>
-    / <a href="/courses/2021/spring.html">Spring 2021</a>
+    / <a href="/notes#spring-2021">Spring 2021</a>
+    / <a href="{{ page.url }}">{{ page.title }}</a>
 </div>

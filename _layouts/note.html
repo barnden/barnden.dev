@@ -26,14 +26,15 @@ layout: default
             {% endfor %}
         {%- endif -%}</p>
         <hr>
-        {% if page.semester == "spring21" %}
         <div class="breadcrumbs">
             <a href="/">home</a>
             / <a href="/notes">notes</a>
-            / <a href="/courses/2021/spring.html">Spring 2021</a>
+        {% if page.semester == "spring21" %}
+            / <a href="/notes#spring-2021">Spring 2021</a>
+        {% endif %}
+            / <a href="/courses/{{ page.categories | join: '/' | downcase}}">{{ page.categories | join: " " | upcase}}</a>
             / <a href="{{ page.url }}">{{ page.title | escape }}</a>
         </div>
-        {% endif %}
     </header>
 
     <div class="post-content e-content" itemprop="articleBody">

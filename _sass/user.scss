@@ -152,3 +152,5 @@ ul.pagination {
         margin: 0 1em;
     }
 }
+
+details > summary { user-select: none }

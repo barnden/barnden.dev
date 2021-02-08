@@ -7,44 +7,70 @@ regenerate: true
 
 {{ content }}
 
-{% assign collection = site.collections | where: "label", page.collection | first %}
+{% assign collection = site.collections
+    | where: "label", page.collection
+    | first
+%}
 
 {% assign categories = "" %}
-{% assign all = collection.docs | map: "categories" %}
-{% for category in all %}
-{% assign t = category | join: "-" | append: "," %}
-{% assign categories = categories | append: t %}
-{% endfor %}
 
-{% assign categories = categories | split: "," | uniq | sort %}
+{% if page.restrict %}
+    {% assign categories = page.restrict | split: "," %}
+{% else %}
+    {% assign all = collection.docs | map: "categories" %}
+
+    {% for category in all %}
+        {% assign t = category | join: "-" | append: "," %}
+
+        {% assign categories = categories | append: t %}
+    {% endfor %}
+
+    {% assign categories = categories
+        | split: ","
+        | uniq
+        | sort
+    %}
+
+    {% if categories.first == "" %}
+        {% assign categories = categories | slice: 1, categories.size %}
+    {% endif %}
+{% endif %}
 
 {% for category in categories %}
-{% assign cat = category | split: "-" %}
-{% if cat[1] %}
-{% assign posts = collection.docs | where: "categories", cat[0] | where: "categories", cat[1] | sort: "date" | reverse %}
-{% else %}
-{% assign posts = collection.docs | where: "categories", cat[0] | sort: "date" | reverse %}
-{% endif %}
-<h2 class="lead">
-    {% if page.capitalize_categories %}
-    {{ category | upcase }}
-    {% else %}
-    {{ category }}
-    {% endif %}
-</h2>
-<ul class="post-list">
+    {% assign cat = category | split: "-" %}
+    {% assign posts = collection.docs %}
 
-{%- assign date_format = "%-d %b. %y" -%}
-{% for note in posts %}
-    {% unless note.hidden %}
-        <li>
-            <span class="post-meta">{{ note.date | date: date_format }}</span>
-            <a href="{{ note.url | relative_url }}" class="post-link">{{ note.title | escape }}</a>
-            {%- if site.show_excerpts -%}
-                {{ note.excerpt }}
-            {%- endif -%}
-        </li>
-    {% endunless %}
-{% endfor %}
-</ul>
+    {% for c in cat %}
+        {% assign posts = posts | where: "categories", c %}
+    {% endfor %}
+
+    {% assign posts = posts | sort: "date" | reverse %}
+
+    {% if page.label %}
+    <h2 class="lead">
+        {% if page.capitalize %}
+            {{ category | capitalize }}
+        {% else if page.upcase %}
+            {{ category | upcase }}
+        {% else if page.downcase %}
+            {{ category | downcase }}
+        {% endif %}
+    </h2>
+    {% endif %}
+
+    <ul class="post-list">
+
+    {%- assign date_format = "%-d %b. %y" -%}
+    {% for note in posts %}
+        {% unless note.hidden %}
+            <li>
+                <span class="post-meta">{{ note.date | date: date_format }}</span>
+                <a href="{{ note.url | relative_url }}" class="post-link">{{ note.title | escape }}</a>
+                {%- if site.show_excerpts -%}
+                    {{ note.excerpt }}
+                {%- endif -%}
+            </li>
+        {% endunless %}
+    {% endfor %}
+    </ul>
 {% endfor %}
