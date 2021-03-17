@@ -7,6 +7,9 @@ url: "https://barnden.dev" # the base hostname & protocol for your site, e.g. ht
 linkedin_username: brandon-g-nguyen
 github_username:  barnden
 
+incremental: true
+timezone: America/Chicago
+
 collections:
   notes:
     output: true
