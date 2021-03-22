@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "noise functions"
-date:   2021-01-26 21:42:08 -0600
-modified_date:   2021-01-28 12:58:00 -0600
+date:   2021-01-26 21:42:08
+modified_date:   2021-01-28 12:58:00
 tags: projects
 ---
 <link rel="stylesheet" href="{{ "/assets/noise/noise.css" | relative_url }}">
