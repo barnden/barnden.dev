@@ -15,3 +15,5 @@ label: false
     / <a href="/notes#spring-2021">Spring 2021</a>
     / <a href="{{ page.url }}">{{ page.title }}</a>
 </div>
+
+The notation for these notes got too complex for me to write using the limited \\(\LaTeX\\) support in MathJax.
