@@ -4,7 +4,7 @@ regenerate: true
 title: notes
 permalink: /notes
 collection: notes
-capitalize_category: false
+label: true
 ---
 
 <div class="breadcrumbs">

@@ -50,10 +50,12 @@ regenerate: true
     <h2 class="lead">
         {% if page.capitalize %}
             {{ category | capitalize }}
-        {% else if page.upcase %}
+        {% elsif page.upcase %}
             {{ category | upcase }}
-        {% else if page.downcase %}
+        {% elsif page.downcase %}
             {{ category | downcase }}
+        {% else %}
+            {{ category }}
         {% endif %}
     </h2>
     {% endif %}
