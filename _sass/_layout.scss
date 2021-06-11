@@ -23,10 +23,10 @@
 }
 
 .site-title {
-    font-size: 1.2rem;
+    font-size: 1.125rem;
     letter-spacing: -1px;
     margin-bottom: 0;
-    float: left;
+    padding: 1px;
 
     @include media-query(650px) { padding-right: 45px; }
 }
@@ -50,7 +50,7 @@
         padding-top: 10px;
         text-align: center;
 
-        > svg path { fill: $border-1 }
+        // > svg path { fill: $border-1 }
     }
 
     label[for="nav-trigger"] {

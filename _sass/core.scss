@@ -76,13 +76,16 @@
 $serif: "Lora", "Roboto Slab", "Times New Roman", serif;
 $mono: "Courier Prime", "Consolas", "Inconsolata", "Roboto Mono", monospace;
 
-$default-size: 20px;
+$default-size: 18px;
 $line-height: 1.65;
 
 $spacing: 2em;
 
 $default-color: #dfe2e9;
 $default-background: #16161D;
+
+$link-color: #85BDBF;
+$link-hover: lighten($link-color, 15%);
 
 $border-1: #363642;
 
