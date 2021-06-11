@@ -10,3 +10,5 @@ group :jekyll_plugins do
     # see github.com/barnden/jekyll-mathjax-csp
     :path => "~/projects/jekyll-mathjax-csp"
 end
+
+gem "webrick", "~> 1.7"

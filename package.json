@@ -10,8 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mathjax-full": "^3.1.2",
-    "mathjax-node-page": "^3.2.0",
+    "mathjax-full": "^3.1.4",
     "yargs": "^16.2.0"
   }
 }
