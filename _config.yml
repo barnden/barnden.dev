@@ -10,6 +10,9 @@ github_username:  barnden
 incremental: true
 timezone: America/Chicago
 
+kramdown:
+  math_engine: katex
+
 collections:
   notes:
     output: true
@@ -25,15 +28,12 @@ plugins:
   - jekyll-feed
   - jekyll-paginate-v2
   - jekyll-minifier
-  - jekyll-mathjax-csp
 
 
 # Plugin Settings
 mathjax_csp:
   single_dollars: false
   output: SVG
-  format: TeX
-  default_csp: "default-src 'self' https://static.barnden.dev; style-src 'self' https://static.barnden.dev [CSP]; font-src 'self' https://static.barnden.dev; worker-src 'self' https://static.barnden.dev;"
 
 jekyll-minifier:
   uglifier_args:
