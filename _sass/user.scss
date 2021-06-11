@@ -41,7 +41,7 @@
         border-left: 3px solid #75715E;
         background: rgba(117,113,94,.04);
 
-        p:first-child { color: #75715E }
+        p:first-child { color: #75715E; }
     }
 
     &.definition {
@@ -50,9 +50,9 @@
         background: rgba(100,131,129,.04);
 
         p:first-child {
-            &:before { content: "Definition" }
+            &:before { content: "Definition"; }
 
-            color: #648381
+            color: #648381;
         }
     }
 
@@ -62,9 +62,28 @@
         background: rgba(215,122,97,.02);
 
         p:first-child {
-            &:before { content: "Example" }
+            &:before { content: "Example"; }
     
-            color: #d77a61
+            color: #d77a61;
+        }
+    }
+
+    &.archive {
+        text-align: center;
+        border: 1px solid #d77a61;
+        border-left: 3px solid #d77a61;
+
+        background: rgba(215,122,97,.02);
+
+        p:first-child {
+            margin: 0;
+
+            &:before {
+                font-weight: bold;
+                content: "This article has been archived.";
+            }
+
+            color: #d77a61;
         }
     }
 }
@@ -134,8 +153,6 @@ h2.lead {
     font-size: .7em;
 }
 
-.site-title { text-decoration: none; }
-
 .breadcrumbs {
     margin: 1em auto;
     font-size: .85rem;
@@ -170,8 +187,24 @@ ul.pagination {
     }
 }
 
-.blue {
-    color: #d14f56;
+a:hover {
+    background-color: $link-color;
+    color: $default-background;
+
+    text-decoration: none;
 }
 
 details > summary { user-select: none }
+
+.hidden {
+    display: none;
+}
+
+li.task-list-item {
+    list-style-type: none;
+    margin-left: -1em;
+
+    input[type=checkbox] {
+        margin-right: 1em;
+    }
+}

@@ -15,3 +15,6 @@ function curl_feature_animation() {
 curl_feature_animation()
 
 document.getElementById("curl-restart").addEventListener("click", curl_feature_animation)
+
+// Hide the large featured display if JavaScript is not enabled.
+document.getElementById("feature").classList.remove("hidden");
