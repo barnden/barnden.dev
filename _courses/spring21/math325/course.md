@@ -16,4 +16,4 @@ label: false
     / <a href="{{ page.url }}">{{ page.title }}</a>
 </div>
 
-The notation for these notes got too complex for me to write using the limited \\(\LaTeX\\) support in MathJax.
+The notation for these notes got too complex for me to write using the limited $$\LaTeX$$ support in MathJax.
