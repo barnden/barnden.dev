@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "noise functions"
+title:  "Noise Functions"
 date:   2021-01-26 21:42:08
-modified_date:   2021-01-28 12:58:00
+modified_date:   2021-06-11 00:00:00
 tags: projects
 ---
 <link rel="stylesheet" href="{{ "/assets/noise/noise.css" | relative_url }}">
@@ -56,7 +56,7 @@ Fractional Brownian motion is used to modulate Perlin noise, it works by superim
 ## Curl Noise
 Notes from ["Curl-Noise for Procedural Fluid Flow"](https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph2007-curlnoise.pdf) by Bridson et al.
 
-A given potential field \\(\Psi\\) has a curl in \\(\mathbb{R}^3\\) defined by
+A given potential field $$\Psi$$ has a curl in $$\mathbb{R}^3$$ defined by
 
 $$
     \vec{v}(x, y, z) = \nabla \times \Psi =
@@ -67,7 +67,7 @@ $$
     \right).
 $$
 
-The curl definition can be extended into \\(\mathbb{R}^2\\) where \\(\Psi\\) is a scalar field, which then yields
+The curl definition can be extended into $$\mathbb{R}^2$$ where $$\Psi$$ is a scalar field, which then yields
 
 $$
     \vec{v}(x, y) = \left(
@@ -76,16 +76,16 @@ $$
     \right).
 $$
 
-If \\(\Psi\\) is smooth, then the curl of \\(\Psi\\) is divergence free, i.e. \\(\nabla \cdot \nabla \times \equiv 0\\), as a result, the field has no sources or sinks and is incompressible.
+If $$\Psi$$ is smooth, then the curl of $$\Psi$$ is divergence free, i.e. $$\nabla \cdot \nabla \times \equiv 0$$, as a result, the field has no sources or sinks and is incompressible.
 ### Considerations
-1. The partial derivatives are calculated using finite diference approximations, Bridson recommends a step value of \\(10^{-4}\\) times the domain.
-2. Perlin noise, \\(N(x, y)\\), can be used to construct the potential field, in \\(\mathbb{R}^2, \Psi = N\\).
+1. The partial derivatives are calculated using finite diference approximations, Bridson recommends a step value of $$10^{-4}$$ times the domain.
+2. Perlin noise, $$N(x, y)$$, can be used to construct the potential field, in $$\mathbb{R}^2, \Psi = N$$.
 3. Adding octaves of different scales can produce fields similar to physical turbulance.
   - See: Kolmogorov turbulance spectrum on how to reduce the speed of small vortices.
 4. Ideally, the field should vary with time, possibly by using FlowNoise.
 
 ### Implementation
-The finite difference calculations in \\(\mathbb{R}^2\\) were made using the [approximations](https://en.wikipedia.org/wiki/Finite_difference#Multivariate_finite_differences) listed on Wikipedia.
+The finite difference calculations in $$\mathbb{R}^2$$ were made using the [approximations](https://en.wikipedia.org/wiki/Finite_difference#Multivariate_finite_differences) listed on Wikipedia.
 
 $$
     f_x(x, y) \approx \frac{f(x + h, y) - f(x - h, y)}{2h},
@@ -95,7 +95,7 @@ $$
     f_y(x, y) \approx \frac{f(x, y + k) - f(x, y - k)}{2k},
 $$
 
-where the constants \\(h\\) and \\(k\\) were \\(10^{-4}\\) times the domain as suggested.
+where the constants $$h$$ and $$k$$ were $$10^{-4}$$ times the domain as suggested.
 
 Instead of taking the curl of the regular Perlin noise, I modulated the field using Fractional Brownian motion using 3 octaves, a lacunarity of 2, and gain of 0.5.
 
