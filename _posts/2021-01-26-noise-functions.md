@@ -11,7 +11,8 @@ math: true
 ## Perlin Noise
 My [implementation](https://github.com/barnden/barn-noise) is based on the Perlin code from ["Simplex noise demystified"](http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf) by Gustavson, and written using JavaScript.
 
-However, I chose to use a randomly generated permuation table through the following snippet, rather than using Perlin's suggested table. The snippet generates a 256 element array with numbers 0 to 255, then shuffles them using the [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
+Instead of using a predefined permutation table, I opted to use a randomly generated one. To do this, I filled a 256 element array with values corresponding with their indicies, then performed a [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
+
 {% highlight javascript %}
 const p = [...new Array(256).keys()]
     .map((v, _, a, j = random(255)) => [a[j], a[j] = v][0])
@@ -38,9 +39,12 @@ function random(max, min = 0, safe = false) {
 }
 {% endhighlight %}
 
-I exploit the two's complement representation of -1 to generate the maximum 32-bit unsigned integer. Then, `crypto.getRandomValues` creates a random unsigned 32-bit int that is divided by the maximum int from earlier to get a float from [0, 1]. Using the random float, I use it to generate a random integer between some range.
+`MAX_UINT32` is the maximum value of an unsigned 32-bit integer (u32). JavaScript does not have a unsigned primitive, so I created an u32 array with one element, setting it to `-1`, which has the two's complement representation of all ones in binary, or the max value of a u32.
 
-It is also possible to do random value mod N, if you want to create a random number [0, N - 1], however, this will result in the numbers not conforming to a uniform distribution as is desired.
+Then, `crypto.getRandomValues` creates a random unsigned 32-bit int that is divided by the maximum int from earlier to get a float from [0, 1]. Using the random float, I use it to generate a random integer between some range.
+
+Assuming that `crypto` is uniformly random, we preserve its randomness by dividing then multiplying. The other option is to do $$x \mod N$$, where $x$ is the random number, and $N$ is one more than the maximum value. The modulo method results in a non-uniform distribution, [as there is bias](https://stackoverflow.com/questions/10984974/why-do-people-say-there-is-modulo-bias-when-using-a-random-number-generator) if MAX_UINT32 mod N is not equal to N - 1.
+
 
 My final implementation of the Perlin noise can take around 8 million calls per second, which is slower than the 10 million from [noise.js](https://github.com/josephg/noisejs).
 
@@ -57,7 +61,7 @@ Fractional Brownian motion is used to modulate Perlin noise, it works by superim
 ## Curl Noise
 Notes from ["Curl-Noise for Procedural Fluid Flow"](https://www.cs.ubc.ca/~rbridson/docs/bridson-siggraph2007-curlnoise.pdf) by Bridson et al.
 
-A given potential field $$\Psi$$ has a curl in $$\mathbb{R}^3$$ defined by
+Given a potential field $$\Psi = \langle \Psi_x, \Psi_y, \Psi_z \rangle$$, its curl in $$\mathbb{R}^3$$ is given by:
 
 $$
     \vec{v}(x, y, z) = \nabla \times \Psi =
@@ -68,16 +72,22 @@ $$
     \right).
 $$
 
-The curl definition can be extended into $$\mathbb{R}^2$$ where $$\Psi$$ is a scalar field, which then yields
+The motivation for taking the curl of a vector field is that the resultant curl field, $$\vec{v}$$, has the following property:
 
 $$
-    \vec{v}(x, y) = \left(
-        \frac{\partial\Psi}{\partial y},
-        -\frac{\partial\Psi}{\partial x}
-    \right).
+\nabla \cdot \vec{v} = \nabla \cdot (\nabla \times \Psi) = 0.
 $$
 
-If $$\Psi$$ is smooth, then the curl of $$\Psi$$ is divergence free, i.e. $$\nabla \cdot \nabla \times \equiv 0$$, as a result, the field has no sources or sinks and is incompressible.
+The divergence of curl of the vector field is always zero. Thus, the curl field contains neither sources nor drains, and is incompressible. These properties are desirable as they ensure uniformity in the field, which is good for noise functions.
+
+For this demo, we are working with a field in $$\mathbb{R}^2$$, so we must extend the definition of curl into two dimensions. Assume that $$\Psi = \langle \Psi_x, \Psi_y\rangle$$.
+
+$$
+    \nabla \times \Psi =
+        \frac{\partial \Psi_y}{\partial x}
+        -\frac{\partial \Psi_x}{\partial y}.
+$$
+
 ### Considerations
 1. The partial derivatives are calculated using finite diference approximations, Bridson recommends a step value of $$10^{-4}$$ times the domain.
 2. Perlin noise, $$N(x, y)$$, can be used to construct the potential field, in $$\mathbb{R}^2, \Psi = N$$.
@@ -85,8 +95,15 @@ If $$\Psi$$ is smooth, then the curl of $$\Psi$$ is divergence free, i.e. $$\nab
   - See: Kolmogorov turbulance spectrum on how to reduce the speed of small vortices.
 4. Ideally, the field should vary with time, possibly by using FlowNoise.
 
-### Implementation
-The finite difference calculations in $$\mathbb{R}^2$$ were made using the [approximations](https://en.wikipedia.org/wiki/Finite_difference#Multivariate_finite_differences) listed on Wikipedia.
+---
+
+### Process
+
+I ended up combining all three of the aforementioned methods. First, I generate Perlin noise, then modulate the field using Fractional Brownian Motion, then apply the Curl noise method over the Perlin + fBm field.
+
+For the fBm, I ended up using 3 octaves, a lacunarity of 2, and gain of 0.5.
+
+To calculate the partial derivatives for Curl noise, I used finite differences in $$\mathbb{R}^2$$ using the [approximations](https://en.wikipedia.org/wiki/Finite_difference#Multivariate_finite_differences) listed on Wikipedia.
 
 $$
     f_x(x, y) \approx \frac{f(x + h, y) - f(x - h, y)}{2h},
@@ -98,11 +115,11 @@ $$
 
 where the constants $$h$$ and $$k$$ were $$10^{-4}$$ times the domain as suggested.
 
-Instead of taking the curl of the regular Perlin noise, I modulated the field using Fractional Brownian motion using 3 octaves, a lacunarity of 2, and gain of 0.5.
-
 To evolve the field over time, I took the delta between the current and start time of animation and put it through a sine function multiplied by a random constant. This number was then put into a 3D Perlin noise function as the third (z) component, and the x/y components were the usual screen coordiates transformed using a function that linearly generates a number within some specified range (in the [Curl Noise demo](#curl-noise-1) from 0 to 8).
 
 ---
+
+### Process Visualization
 
 <div class="noise-container">
     <div class="step-1">
@@ -121,7 +138,7 @@ To evolve the field over time, I took the delta between the current and start ti
         <canvas id="demo-curl" class="noise-demo" width="450" height="450"></canvas>
         <figcaption>
         Step 3: Calculate 2D curl using finite differences.<br>
-        To visualize curl field, I sampled a grid of points and computed the angle of flow at that point, then drew a line in that direction, with the color corresponding to the HSL color at the angle it is pointing.
+        To visualize the curl field, I sampled a grid of points and computed the angle of flow at the point. Using HSL, I translated the angle into the line's color.
         </figcaption>
     </div>
     <button id="demo-restart">Generate New Renders</button>
@@ -131,9 +148,7 @@ To evolve the field over time, I took the delta between the current and start ti
 
 ## Demonstrations
 
-In the end, I added support for web workers in order to parallelize the computation for noise generation, however, using WebGL shaders would be a much better option for parallelization in the browser.
-
-The cost incurred for invoking multiple threads is significant, and would actually be slower than processing the noise in the main thread for the particle demos on this page.
+In the end, I used web workers in order to offload the computation for noise generation from the main thread, and to parallelize it. But, a much better option would be using WebGL shaders to take advantage of parallelization on the graphics processor.
 
 The demonstrations below are rendered in real time, using particles originating in random positions on the xy-plane with velocities determined by the corresponding noise field.
 
