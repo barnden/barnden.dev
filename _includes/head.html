@@ -3,11 +3,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=800, initial-scale=1.0">
     <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+
+    {% if page.math %}
     <link rel="stylesheet" href="https://static.barnden.dev/katex.min.css">
+    {% endif %}
 
     {% if page.title %}
-    <title>{{ page.title | escape }} | barnden</title>
+    <title>{{ page.title | escape }} | Brandon Nguyen</title>
     {% else %}
-    <title>barnden</title>
+    <title>Brandon Nguyen</title>
     {% endif %}
 </head>
