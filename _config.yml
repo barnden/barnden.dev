@@ -70,7 +70,6 @@ exclude:
   - upload.sh
   - Gemfile
   - Gemfile.lock
-  - csp.conf
 #   - node_modules/
 #   - vendor/bundle/
 #   - vendor/cache/
