@@ -27,6 +27,9 @@
     padding: .5em .75em;
     margin: 1.25em 0;
 
+    border-radius: 4px;
+    border-left: 4px solid $default-background;
+
     &.remark p:first-child:before { content: "Remark" }
 
     & p:first-child {
@@ -39,17 +42,15 @@
     }
 
     &.remark {
-        border: 1px solid rgba(117,113,94,.3);
-        border-left: 3px solid #75715E;
-        background: rgba(117,113,94,.04);
+        border-color: rgba($beige, 0.85);
+        background: rgba($beige, 0.05);
 
-        p:first-child { color: #75715E; }
+        p:first-child { color: $beige; }
     }
 
     &.definition {
-        border: 1px solid rgba(100,131,129,.3);
-        border-left: 3px solid $green;
-        background: rgba(100,131,129,.04);
+        border-color: rgba($green, 0.85);
+        background: rgba($green, 0.05);
 
         p:first-child {
             &:before { content: "Definition"; }
@@ -59,9 +60,8 @@
     }
 
     &.example {
-        border: 1px solid rgba(215,122,97,.2);
-        border-left: 3px solid $orange;
-        background: rgba(215,122,97,.02);
+        border-color: rgba($orange, 0.85);
+        background: rgba($orange, 0.05);
 
         p:first-child {
             &:before { content: "Example"; }
@@ -71,11 +71,10 @@
     }
 
     &.archive {
-        text-align: center;
-        border: 1px solid $orange;
-        border-left: 3px solid $orange;
-
+        border-color: $orange;
         background: rgba(215,122,97,.02);
+
+        text-align: center;
 
         p:first-child {
             margin: 0;
@@ -98,9 +97,16 @@ ul.post-list {
 
     li {
         padding: 1rem;
+        background-color: $default-background;
 
         border: 1px solid darken($border-1, 7.25%);
         border-radius: 6px;
+
+        transition: border .5s ease;
+
+        &:hover {
+            border: 1px solid lighten($border-1, 7.25%);
+        }
 
         &:not(:last-child) {
             margin-bottom: 1rem;
@@ -213,13 +219,6 @@ ul.pagination {
         flex: 0;
         margin: 0 1em;
     }
-}
-
-a:hover {
-    background-color: $link-color;
-    color: $default-background;
-
-    text-decoration: none;
 }
 
 details > summary { user-select: none }
