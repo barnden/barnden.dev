@@ -3,8 +3,10 @@ layout: post
 title:  "Noise Functions"
 date:   2021-01-26 21:42:08
 modified_date:   2021-06-11 00:00:00
-tags: projects
+categories: projects featured art
 math: true
+
+excerpt: Generative art featuring Fractional Brownian Motion and Perlin/curl noise.
 ---
 <link rel="stylesheet" href="{{ "/assets/noise/noise.css" | relative_url }}">
 
