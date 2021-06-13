@@ -1,0 +1,21 @@
+---
+layout: default
+regenerate: true
+title: blog
+permalink: /blog
+---
+
+{% if site.posts.size > 0 %}
+<h2 class="lead">posts</h2>
+<ul class="post-list">
+    {% assign date_format = "%-d %b. %y" %}
+    {% for post in site.posts %}
+    {% if post.hidden != true %}
+    <li>
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <a href="{{ post.url | relative_url}}" class="post-link">{{ post.title | escape }}</a>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}

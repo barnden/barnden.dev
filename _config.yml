@@ -26,8 +26,8 @@ collections:
 # Build settings
 plugins:
   - jekyll-feed
-  - jekyll-paginate-v2
   - jekyll-minifier
+  # - jekyll-paginate-v2
 
 
 # Plugin Settings
@@ -39,17 +39,17 @@ jekyll-minifier:
   uglifier_args:
     harmony: true
 
-pagination:
-  enabled: true
-  collection: "posts"
-  per_page: 5
-  permalink: "/page/:num"
-  title: ":title | page :num"
-  sort_field: "date"
-  trail:
-    before: 2
-    after: 2
-  indexpage: "index"
+# pagination:
+#   enabled: true
+#   collection: "posts"
+#   per_page: 5
+#   permalink: "/page/:num"
+#   title: ":title | page :num"
+#   sort_field: "date"
+#   trail:
+#     before: 2
+#     after: 2
+#   indexpage: "index"
 
 # Exclude from processing.
 # The following items will not be processed, by default.
