@@ -78,7 +78,7 @@ $$
 \nabla \cdot \vec{v} = \nabla \cdot (\nabla \times \Psi) = 0.
 $$
 
-The divergence of curl of the vector field is always zero. Thus, the curl field contains neither sources nor drains, and is incompressible. These properties are desirable as they ensure uniformity in the field, which is good for noise functions.
+The divergence of curl of the vector field (at least in $$\mathbb{R^3}$$) is always zero. Thus, the curl field contains neither sources nor drains, and is incompressible. These properties are desirable as they ensure uniformity in the field, which is good for noise functions.
 
 For this demo, we are working with a field in $$\mathbb{R}^2$$, so we must extend the definition of curl into two dimensions. Assume that $$\Psi = \langle \Psi_x, \Psi_y\rangle$$.
 
@@ -87,6 +87,14 @@ $$
         \frac{\partial \Psi_y}{\partial x}
         -\frac{\partial \Psi_x}{\partial y}.
 $$
+
+For my implementation of Curl noise, I split the resultant scalar into two components in order to create a vector field:
+
+$$
+    \vec{v} = \left\langle \frac{\partial \Psi_y}{\partial x}, -\frac{\partial \Psi_x}{\partial y} \right\rangle
+$$
+
+This made animation individual particles easier, as I could just set the velocity of the particle to the value of the field at that position. As opposed to making the angle some sort of function based on the scalar value. And the visual much more appealing --- in my opinion.
 
 ### Considerations
 1. The partial derivatives are calculated using finite diference approximations, Bridson recommends a step value of $$10^{-4}$$ times the domain.
