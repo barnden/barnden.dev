@@ -11,24 +11,33 @@
     border-bottom: 1px solid $border-1;
     border-top: 1px solid $border-1;
 
-    min-height: 3rem;
-    line-height: 2rem;
-    position: relative;
+    min-height: 2.5rem;
 
     display: flex;
     align-items: center;
     justify-content: center;
+    list-style-type: none;
 
-    margin-bottom: $spacing;
-}
+    margin-bottom: $spacing / 1.25;
 
-.site-title {
-    font-size: 1.125rem;
-    letter-spacing: -1px;
-    margin-bottom: 0;
-    padding: 1px;
+    a {
+        font-size: 1rem;
+        letter-spacing: -1px;
+        margin: 0;
+        padding: 1px;
+    }
 
-    @include media-query(650px) { padding-right: 45px; }
+    ul {
+        display: flex;
+        list-style-type: none;
+        margin: 0;
+
+        li:not(:last-child)::after {
+            font-size: 1rem;
+            margin: 0 0.25rem;
+            content: "\2014";
+        }
+    }
 }
 
 .site-nav {
