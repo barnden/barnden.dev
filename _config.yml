@@ -2,7 +2,7 @@ email: me@barnden.dev
 description: >- # this means to ignore newlines until "baseurl:"
   Brandon (barnden) G. Nguyen's personal blog
 baseurl: "/" # the subpath of your site, e.g. /blog
-permalink: /:categories/:year/:month/:title
+permalink: /:year/:month/:title
 url: "https://barnden.dev" # the base hostname & protocol for your site, e.g. http://example.com
 linkedin_username: brandon-g-nguyen
 github_username:  barnden
