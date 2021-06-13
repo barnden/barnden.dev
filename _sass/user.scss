@@ -9,10 +9,10 @@
             flex-basis: 100%;
             border: 1px solid $border-1;
         }
+
         .description {
             flex-basis: 100%;
             text-align: center;
-            margin-top: 1em;
 
             button {
                 margin-top: 1.5em;
@@ -46,32 +46,32 @@
 
     &.definition {
         border: 1px solid rgba(100,131,129,.3);
-        border-left: 3px solid #648381;
+        border-left: 3px solid $green;
         background: rgba(100,131,129,.04);
 
         p:first-child {
             &:before { content: "Definition"; }
 
-            color: #648381;
+            color: $green;
         }
     }
 
     &.example {
         border: 1px solid rgba(215,122,97,.2);
-        border-left: 3px solid #d77a61;
+        border-left: 3px solid $orange;
         background: rgba(215,122,97,.02);
 
         p:first-child {
             &:before { content: "Example"; }
     
-            color: #d77a61;
+            color: $orange;
         }
     }
 
     &.archive {
         text-align: center;
-        border: 1px solid #d77a61;
-        border-left: 3px solid #d77a61;
+        border: 1px solid $orange;
+        border-left: 3px solid $orange;
 
         background: rgba(215,122,97,.02);
 
@@ -83,7 +83,7 @@
                 content: "This article has been archived.";
             }
 
-            color: #d77a61;
+            color: $orange;
         }
     }
 }
@@ -92,23 +92,49 @@
 
 ul.post-list {
     list-style-type: none;
+    margin: 1em 0;
 
     li {
-        text-indent: -135px;
-        margin-left: 135px;
+        padding: 1rem;
 
-        & > span {
-            position: relative;
+        border: 1px solid darken($border-1, 7.25%);
+        border-radius: 6px;
+
+        &:not(:last-child) {
+            margin-bottom: 1rem;
+        }
+
+        & span.post-meta {
+            margin-right: 0.5rem;
+        }
+
+        & span.post-tag {
+            background: darken($default-background, 2%);
+            color: darken($default-color, 15%);
+
+            font-size: 0.875rem;
+            font-family: $mono;
+
+            margin: 0 2px;
+            padding: 2px 4px;
+
+            border: 1px solid lighten($border-1, 15%);
+            border-radius: 5px;
+        }
+
+        & > div.title > a {
             display: inline-block;
-            text-align: right;
-            margin-right: 30px;
-            min-width: 100px;
 
-            &:after {
-                content: "—";
-                position: absolute;
-                right: -25px
-            }
+            line-height: normal;
+            margin: 0.25rem 0;
+
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        &.feature > div.title > a {
+            font-size: 1.65rem;
+            margin: .75rem 0;
         }
     }
 }

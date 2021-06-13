@@ -6,8 +6,40 @@ regenerate: true
 <div class="home">
     {% include featured.html %}
 
-    <h2 class="lead">misc. links</h2>
+    <h2 class="lead">other links &amp; projects</h2>
     <ul class="post-list">
-        <li><a href="https://generic.fish">generic.fish</a></li>
+        <li>
+            <div>
+                <span class="post-meta">2021 Feb.</span>
+                <span class="post-tag">projects</span>
+                <span class="post-tag">csce_313</span>
+                <span class="post-tag">c++</span>
+            </div>
+            <div class="title">
+                <a href="https://github.com/barnden/shell" class="post-link">shell</a>
+            </div>
+            <div class="post-excerpt">
+                A non-POSIX compliant shell written for my operating systems class.<br>
+                Includes a working parser/abstract-syntax-tree generator, and an interpreter. Also has syntax highlighting using ANSI control sequences (no ncurses).
+            </div>
+        </li>
+        <li>
+            <div>
+                <span class="post-meta">2020 Dec.</span>
+                <span class="post-tag">projects</span>
+                <span class="post-tag">idle_game</span>
+                <span class="post-tag">javascript</span>
+            </div>
+            <div class="title">
+                <a href="https://generic.fish/clicker" class="post-link">khoima clicker</a>
+            </div>
+            <div class="post-excerpt">
+                A browser based idle game, 2D graphics through HTML DOM manipulation and JavaScript canvases. Includes minigames like Shenzhen Solitaire, Flappy Bird, and Minesweeper.
+            </div>
+        </li>
+        <div class="center">
+            see more stuff on the <a href="{{ "/blog" | relative_url }}">blog page</a>
+        </div>
     </ul>
+
 </div>

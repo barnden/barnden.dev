@@ -1,18 +1,33 @@
-<div id="feature" class="hidden">
-    <div class="container">
-        <canvas id="curl-demo" width="700" height="700"></canvas>
-        <div class="description">
-            <figcaption>
-                <a href="/2021/01/noise-functions">noise functions.</a>
-            </figcaption>
-    
-            <button id="curl-restart">Restart Animation</button>
+<ul class="post-list">
+    <li class="feature">
+        <div>
+            <span class="post-meta">2021 Jan.</span>
+            <span class="post-tag">projects</span>
+            <span class="post-tag">featured</span>
+            <span class="post-tag">art</span>
         </div>
-    </div>
 
-    <hr>
+        <div class="title">
+            <a href="#">noise functions</a>
+        </div>
 
-    <script src="https://static.barnden.dev/barn-noise/noise.js"></script>
-    <script src="https://static.barnden.dev/barn-noise/particle.js"></script>
-    <script src="{{ "/assets/noise/noise_feature.js" | relative_url }}"></script>
-</div>
+        <div class="post-excerpt">
+            <div id="feature" class="hidden">
+                <div class="container">
+                    <canvas id="curl-demo" width="650" height="650"></canvas>
+                    <div class="description">
+                        <button id="curl-restart">Restart Animation</button>
+                    </div>
+                </div>
+                <hr>
+
+                <script src="https://static.barnden.dev/barn-noise/noise.js"></script>
+                <script src="https://static.barnden.dev/barn-noise/particle.js"></script>
+                <script src="{{ "/assets/noise/noise_feature.js" | relative_url }}"></script>
+            </div>
+            <div class="center">
+                Generative art featuring Fractional Brownian Motion and Perlin/curl noise.
+            </div>
+        </div>
+    </li>
+</ul>

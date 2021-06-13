@@ -37,44 +37,44 @@
 }
 
 @font-face {
-    font-family: 'Courier Prime';
+    font-family: 'Fantasque Sans Mono';
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: url(https://static.barnden.dev/fonts/Courier_Prime/CourierPrime-Regular.ttf) format('truetype');
+    src: url(https://static.barnden.dev/fonts/Fantasque/FantasqueSansMono-Regular.ttf) format('truetype');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-    font-family: 'Courier Prime';
+    font-family: 'Fantasque Sans Mono';
     font-style: italic;
     font-weight: 400;
     font-display: swap;
-    src: url(https://static.barnden.dev/fonts/Courier_Prime/CourierPrime-Italic.ttf) format('truetype');
+    src: url(https://static.barnden.dev/fonts/Fantasque/FantasqueSansMono-Italic.ttf) format('truetype');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-    font-family: 'Courier Prime';
+    font-family: 'Fantasque Sans Mono';
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: url(https://static.barnden.dev/fonts/Courier_Prime/CourierPrime-Bold.ttf) format('truetype');
+    src: url(https://static.barnden.dev/fonts/Fantasque/FantasqueSansMono-Bold.ttf) format('truetype');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-    font-family: 'Courier Prime';
+    font-family: 'Fantasque Sans Mono';
     font-style: italic;
     font-weight: 700;
     font-display: swap;
-    src: url(https://static.barnden.dev/fonts/Courier_Prime/CourierPrime-BoldItalic.ttf) format('truetype');
+    src: url(https://static.barnden.dev/fonts/Fantasque/FantasqueSansMono-BoldItalic.ttf) format('truetype');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 
 $serif: "Lora", "Roboto Slab", "Times New Roman", serif;
-$mono: "Courier Prime", "Consolas", "Inconsolata", "Roboto Mono", monospace;
+$mono: "Fantasque Sans Mono", "Consolas", "Inconsolata", "Roboto Mono", monospace;
 
 $default-size: 18px;
 $line-height: 1.65;
@@ -87,7 +87,11 @@ $default-background: #16161D;
 $link-color: #85BDBF;
 $link-hover: lighten($link-color, 15%);
 
-$border-1: #363642;
+$border-1: lighten($default-background, 15%);
+
+$orange: #d77a61;
+$green: #648381;
+
 
 :root { font-size: $default-size }
 

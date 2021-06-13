@@ -1,19 +1,31 @@
 ---
-layout: default
+layout: page
 regenerate: true
 title: blog
 permalink: /blog
 ---
 
 {% if site.posts.size > 0 %}
-<h2 class="lead">posts</h2>
 <ul class="post-list">
-    {% assign date_format = "%-d %b. %y" %}
+    {% assign date_format = "%Y %b. %-d" %}
     {% for post in site.posts %}
+
+    {% assign categories = post.categories %}
+
     {% if post.hidden != true %}
     <li>
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
-        <a href="{{ post.url | relative_url}}" class="post-link">{{ post.title | escape }}</a>
+        <div>
+            <span class="post-meta">{{ post.date | date: date_format }}</span>
+            {% if categories.size > 0 %}
+            {% for category in categories %}
+            <span class="post-tag">{{ category }}</span>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="title">
+            <a href="{{ post.url | relative_url}}" class="post-link">{{ post.title | escape }}</a>
+        </div>
+        <div class="post-excerpt">{{ post.excerpt }}</div>
     </li>
     {% endif %}
     {% endfor %}

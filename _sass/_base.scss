@@ -35,7 +35,10 @@ p, blockquote, pre,
 ul, ol, dl, figure,
 %vertical-rhythm { margin-bottom: $spacing / 2; }
 
-hr { margin: $spacing / 1.75 0; }
+hr {
+    border-color: $border-1;
+    margin: $spacing / 1.75 0;
+}
 
 img {
     max-width: 100%;
