@@ -73,12 +73,13 @@ pre, code {
     border: 1px solid $border-1;
 
     border-radius: 5px;
-    background: #080808;
-
-    white-space: nowrap;
+    background: darken($default-background, 5%);
 }
 
-code { padding: 2px 4px }
+code {
+    padding: 2px 4px;
+    white-space: nowrap;
+}
 
 pre {
     padding: 8px 12px;
@@ -87,6 +88,7 @@ pre {
     > code {
         border: none;
         padding: 1px 0;
+        white-space: pre-wrap;
     }
 }
 
