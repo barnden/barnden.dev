@@ -1,16 +1,31 @@
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=800, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
+    {% assign title = "Brandon G. Nguyen" %}
 
+    {% if page.title %}
+    {% assign title = page.title | append: " | " | append: title | escape %}
+    <meta property="og:title" content="{{ page.title }}">
+    {% else %}
+    <meta property="og:title" content="{{ title }}">
+    {% endif %}
+
+    <meta charset="UTF-8">
+    <meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% if page.excerpt %}
+    <meta name="og:description" content="{{ page.excerpt }}">
+    {% else %}
+    <meta name="og:description" content="Brandon G. Nguyen's portfolio site.">
+    {% endif%}
+    <meta property="og:site_name" content="Brandon G. Nguyen's Website">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ page.url | absolute_url }}">
+
+    <link rel="stylesheet" href="{{ "/assets/css/style.css" | relative_url }}">
     {% if page.math %}
     <link rel="stylesheet" href="https://static.barnden.dev/katex.min.css">
     {% endif %}
 
-    {% if page.title %}
-    <title>{{ page.title | escape }} | Brandon G. Nguyen</title>
-    {% else %}
-    <title>Brandon G. Nguyen</title>
-    {% endif %}
+    <title>{{ title }}</title>
 </head>
