@@ -71,6 +71,8 @@ concept Hashable = requires(T a) {
 consteval int a() { return 29; }
 ```
 
+---
+
 ### Improving Preprocessor Highlighting
 
 {% example %}
@@ -144,17 +146,6 @@ rule %r/\s(.[^\n\s]+)/, Name::Function, :pop!
 ```
 It takes everything after the first, and before the second whitespace character and marks it as `Name::Function`. If the preprocessor directive takes some parameter, like `#define` takes the name of the macro, it will give it a different emphasis. Then, it will pop the state of the lexer, and then highlight the rest of the tokens without the context of it being a macro.
 
-This, however, is still a hack:
-```cpp
-#define MACRO1 0
-#define MACRO2 0
-
-#if MACRO1 == MACRO2
-#endif
-```
-
-We would expect `MACRO2` in the boolean expression to be the same color as `MACRO1`, but it is not. It would probably be better to not use this second rule and pop after the first rule.
-
 After applying these new rules, we can see the effect it had:
 ```cpp
 #include <unistd.h>
@@ -171,6 +162,21 @@ After applying these new rules, we can see the effect it had:
 #    endif
 #endif
 ```
+
+But, the second rule is just a hack, as we demonstrated below:
+```cpp
+#define MACRO1 0
+#define MACRO2 0
+
+#if MACRO1 == MACRO2
+#endif
+```
+
+We would expect `MACRO2` in the boolean expression to be the same color as `MACRO1`, but it is not. It would probably be better to not use this second rule and pop after the first rule.
+
+It would be nice if we could have this emphasis, but it would have to be through some form of parser, not through regex.
+
+---
 
 ### Misc. Issues
 
