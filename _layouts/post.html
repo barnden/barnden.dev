@@ -6,7 +6,8 @@ layout: default
         <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
         <p class="post-meta">
             {% assign date_fmt = "%Y %b. %-d" %}
-            <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: date_fmt}}</time>
+            <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{
+                page.date | date: date_fmt}}</time>
             {% if page.modified_date %}
             {% assign mdate = page.modified_date | date_to_xmlschema | date: date_fmt %}
             <span class="dateModified">
@@ -14,8 +15,15 @@ layout: default
 
                 <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">{{ mdate }}</time>)
             </span>
-            {% endif %}
         </p>
+        {% endif %}
+        {% if page.categories %}
+        <div>
+            {% for category in page.categories %}
+            <span class="post-tag">{{ category }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
         <hr>
     </header>
 

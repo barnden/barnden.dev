@@ -117,20 +117,6 @@ ul.post-list {
             margin-right: 0.5rem;
         }
 
-        & span.post-tag {
-            background: darken($default-background, 2%);
-            color: darken($default-color, 15%);
-
-            font-size: 0.875rem;
-            font-family: $mono;
-
-            margin: 0 2px;
-            padding: 2px 4px;
-
-            border: 1px solid $border-3;
-            border-radius: 5px;
-        }
-
         & > div.title > a {
             display: inline-block;
 
@@ -146,6 +132,20 @@ ul.post-list {
             margin: .75rem 0;
         }
     }
+}
+
+span.post-tag {
+    background: darken($default-background, 2%);
+    color: darken($default-color, 15%);
+
+    font-size: 0.875rem;
+    font-family: $mono;
+
+    margin: 0 2px;
+    padding: 2px 4px;
+
+    border: 1px solid $border-3;
+    border-radius: 5px;
 }
 
 h2.lead {
