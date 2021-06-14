@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     {% if page.excerpt %}
-    <meta name="og:description" content="{{ page.excerpt }}">
+    <meta name="og:description" content="{{ page.excerpt | strip_html | escape }}">
     {% else %}
     <meta name="og:description" content="Brandon G. Nguyen's portfolio site.">
     {% endif%}
