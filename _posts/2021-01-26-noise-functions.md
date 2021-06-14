@@ -15,23 +15,23 @@ My [implementation](https://github.com/barnden/barn-noise) is based on the Perli
 
 Instead of using a predefined permutation table, I opted to use a randomly generated one. To do this, I filled a 256 element array with values corresponding with their indicies, then performed a [Fisher-Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle).
 
-{% highlight javascript %}
+```js
 const p = [...new Array(256).keys()]
     .map((v, _, a, j = random(255)) => [a[j], a[j] = v][0])
+
 const perm = new Array(512)
     .fill(0)
     .map((_, i) => p[i & 255])
-{% endhighlight %}
+```
 
 The `random()` function was implemented in the following snippet using the `crypto` library provided in modern browsers (with fallback to `Math.random()`), which hopefully ensures a uniform random distribution.
 
-{% highlight javascript %}
+```js
 const MAX_UINT32 = new Uint32Array(1).fill(-1)[0]
 
 function random_float() {
     return self.crypto ?
-        self.crypto.getRandomValues(new Uint32Array(1))[0] / MAX_UINT32 :
-        Math.random()
+        self.crypto.getRandomValues(new Uint32Array(1))[0] / MAX_UINT32 : Math.random()
 }
 
 function random(max, min = 0, safe = false) {
@@ -39,7 +39,7 @@ function random(max, min = 0, safe = false) {
 
     return safe ? Math.trunc(val) : ~~val
 }
-{% endhighlight %}
+```
 
 `MAX_UINT32` is the maximum value of an unsigned 32-bit integer (u32). JavaScript does not have a unsigned primitive, so I created an u32 array with one element, setting it to `-1`, which has the two's complement representation of all ones in binary, or the max value of a u32.
 
