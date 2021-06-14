@@ -14,14 +14,14 @@ kramdown:
   math_engine: katex
 
 collections:
-  notes:
-    output: true
-    permalink: /:collection/:year/:month/:day/:title
-    label: "notes"
-  courses:
-    output: true
-    permalink: /:collection/:categories/:title
-    label: "courses"
+  # notes:
+  #   output: true
+  #   permalink: /:collection/:year/:month/:day/:title
+  #   label: "notes"
+  # courses:
+  #   output: true
+  #   permalink: /:collection/:categories/:title
+  #   label: "courses"
 
 # Build settings
 plugins:
@@ -31,10 +31,6 @@ plugins:
 
 
 # Plugin Settings
-mathjax_csp:
-  single_dollars: false
-  output: SVG
-
 jekyll-minifier:
   uglifier_args:
     harmony: true
