@@ -8,112 +8,39 @@
 }
 
 .site-header {
-    border-bottom: 1px solid $border-1;
-
     min-height: 1.75rem;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    list-style-type: none;
 
     margin-bottom: $spacing / 1.25;
 
-    a {
-        font-size: 1rem;
-        letter-spacing: -1px;
-        margin: 0;
-        padding: 1px;
-    }
+    border-bottom: 1px solid $border-1;
 
     ul {
         display: flex;
-        list-style-type: none;
+        flex-wrap: wrap;
+
         margin: 0;
 
-        li:not(:last-child)::after {
+        list-style-type: none;
+
+        li {
+            display: inline-block;
             font-size: 1rem;
-            margin: 0 0.25rem;
-            content: "\2014";
+            letter-spacing: -1px;
+
+            a {
+                margin: 0;
+                padding: 1px;
+
+                white-space: nowrap;
+            }
+
+            &:not(:last-child)::after {
+                margin: 0 0.25rem;
+                content: "\2014";
+            }
         }
     }
 }
-
-.site-nav {
-    position: absolute;
-    top: 9px;
-    right: $spacing / 2;
-    background: $default-background;
-    border: 1px solid $border-1;
-    border-radius: 5px;
-    text-align: right;
-
-    .nav-trigger { display: none; }
-
-    .menu-icon {
-        float: right;
-        width: 36px;
-        height: 26px;
-        line-height: 0;
-        padding-top: 10px;
-        text-align: center;
-
-        // > svg path { fill: $border-1 }
-    }
-
-    label[for="nav-trigger"] {
-        display: block;
-        float: right;
-        width: 36px;
-        height: 36px;
-        z-index: 2;
-        cursor: pointer;
-    }
-
-    input ~ .trigger {
-        clear: both;
-        display: none;
-    }
-
-    input:checked ~ .trigger {
-        display: block;
-        padding-bottom: 5px;
-    }
-
-    .page-link {
-        line-height: $line-height;
-        display: block;
-        padding: 5px 10px;
-    
-        // Gaps between nav items, but not on the last one
-        &:not(:last-child) {
-          margin-right: 0;
-        }
-        margin-left: 20px;
-    }
-
-    @media screen and (min-width: 800px) {
-        position: static;
-        float: right;
-        border: none;
-        background-color: inherit;
-
-        label[for="nav-trigger"] { display: none; }
-
-        .menu-icon { display: none; }
-
-        input ~ .trigger { display: block; }
-
-        .page-link {
-            display: inline;
-            padding: 0;
-
-            &:not(:last-child) { margin-right: 20px; }
-            margin-left: auto;
-        }
-    }
-}
-
 
 main { padding-bottom: 10rem }
 html { min-height: 100vh }
@@ -126,10 +53,6 @@ footer {
     margin: 1rem 0;
     width: 100%;
     border-top: 1px solid $border-1;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     padding: 0; margin: 0;
 
