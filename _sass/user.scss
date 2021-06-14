@@ -33,7 +33,7 @@
 
     &.remark p:first-child:before { content: "Remark" }
 
-    & p:first-child {
+    & > p:first-child {
         font-weight: bold;
 
         &:before {
@@ -46,14 +46,14 @@
         border-color: rgba($beige, 0.85);
         background: rgba($beige, 0.05);
 
-        p:first-child { color: $beige; }
+        & > p:first-child { color: $beige; }
     }
 
     &.definition {
         border-color: rgba($green, 0.85);
         background: rgba($green, 0.05);
 
-        p:first-child {
+        & > p:first-child {
             &:before { content: "Definition"; }
 
             color: $green;
@@ -64,7 +64,7 @@
         border-color: rgba($orange, 0.85);
         background: rgba($orange, 0.05);
 
-        p:first-child {
+        & > p:first-child {
             &:before { content: "Example"; }
     
             color: $orange;
@@ -77,7 +77,7 @@
 
         text-align: center;
 
-        p:first-child {
+        & > p:first-child {
             margin: 0;
 
             &:before {
@@ -100,13 +100,13 @@ ul.post-list {
         padding: 1rem;
         background-color: $default-background;
 
-        border: 1px solid darken($border-1, 7.25%);
+        border: 1px solid $border-0;
         border-radius: 6px;
 
         transition: border .5s ease;
 
         &:hover {
-            border: 1px solid lighten($border-1, 7.25%);
+            border: 1px solid $border-2;
         }
 
         &:not(:last-child) {
@@ -127,7 +127,7 @@ ul.post-list {
             margin: 0 2px;
             padding: 2px 4px;
 
-            border: 1px solid lighten($border-1, 15%);
+            border: 1px solid $border-3;
             border-radius: 5px;
         }
 
