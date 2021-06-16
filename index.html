@@ -5,60 +5,50 @@ regenerate: true
 ---
 
 <div class="home">
-    {% include featured.html %}
+    <ul class="post-list">
+        {% for card in site.cards %}
+        {% if card.tags contains "featured"%}
+        <li class="feature">
+            <div>
+                <span class="post-meta">{{ card.date | date: "%Y %B" }}</span>
+                {% for tag in card.tags %}
+                <span class="post-tag">{{ tag | escape }}</span>
+                {% endfor %}
+            </div>
 
+            <div class="title">
+                <a href="{{ card.link }}">{{ card.title }}</a>
+            </div>
+
+            <div class="post-excerpt">
+                {{ card.content }}
+            </div>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
     <h2 class="lead">other links &amp; projects</h2>
     <ul class="post-list">
+        {% for card in site.cards %}
+        {% if card.tags contains "featured" %}{% else %}
         <li>
             <div>
-                <span class="post-meta">2021 May</span>
-                <span class="post-tag">projects</span>
-                <span class="post-tag">osdev</span>
-                <span class="post-tag">c++</span>
-                <span class="post-tag">x86_64 asm</span>
-                <span class="post-tag">cmake</span>
-                <span class="post-tag">linker script</span>
+                <span class="post-meta">{{ card.date | date: "%Y %B" }}</span>
+                {% for tag in card.tags %}
+                <span class="post-tag">{{ tag | escape }}</span>
+                {% endfor %}
             </div>
+
             <div class="title">
-                <a href="https://github.com/genericfish/FishOS" class="post-link">fish os</a>
+                <a href="{{ card.link }}">{{ card.title }}</a>
             </div>
+
             <div class="post-excerpt">
-                A POSIX UNIX-like hobby OS, as of 13 June: it includes long-mode, higher half kernel loaded at -2 GB, interrupts, and a very limited libc/c++ std library.
-                <br>
-                <div class="center">
-                    Currently working on page frame allocation.
-                </div>
+                {{ card.content }}
             </div>
         </li>
-        <li>
-            <div>
-                <span class="post-meta">2021 Feb.</span>
-                <span class="post-tag">projects</span>
-                <span class="post-tag">csce_313</span>
-                <span class="post-tag">c++</span>
-            </div>
-            <div class="title">
-                <a href="https://github.com/barnden/shell" class="post-link">shell</a>
-            </div>
-            <div class="post-excerpt">
-                A non-POSIX compliant shell written for my operating systems class.<br>
-                Includes a working parser/abstract-syntax-tree generator, and an AST-walk interpreter. Also has syntax highlighting using ANSI control sequences (no ncurses).
-            </div>
-        </li>
-        <li>
-            <div>
-                <span class="post-meta">2020 Dec.</span>
-                <span class="post-tag">projects</span>
-                <span class="post-tag">idle_game</span>
-                <span class="post-tag">javascript</span>
-            </div>
-            <div class="title">
-                <a href="https://generic.fish/clicker" class="post-link">khoima clicker</a>
-            </div>
-            <div class="post-excerpt">
-                A browser based idle game, 2D graphics through HTML DOM manipulation and JavaScript canvases. Includes minigames like Shenzhen Solitaire, Flappy Bird, and Minesweeper.
-            </div>
-        </li>
+        {% endif %}
+        {% endfor %}
         <div class="center">
             see more stuff on the <a href="{{ "/blog" | relative_url }}">blog page</a>
         </div>

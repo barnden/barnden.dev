@@ -22,6 +22,7 @@ collections:
   #   output: true
   #   permalink: /:collection/:categories/:title
   #   label: "courses"
+  - cards
 
 # Build settings
 plugins:
