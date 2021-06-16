@@ -163,7 +163,7 @@ After applying these new rules, we can see the effect it had:
 #endif
 ```
 
-But, the second rule is just a hack, as we demonstrated below:
+But, the second rule is just a hack:
 ```cpp
 #define MACRO1 0
 #define MACRO2 0
@@ -172,9 +172,7 @@ But, the second rule is just a hack, as we demonstrated below:
 #endif
 ```
 
-We would expect `MACRO2` in the boolean expression to be the same color as `MACRO1`, but it is not. It would probably be better to not use this second rule and pop after the first rule.
-
-It would be nice if we could have this emphasis, but it would have to be through some form of parser, not through regex.
+We would expect `MACRO2` in the boolean expression to be the same color as `MACRO1`, but it is not. One solution is to pop after formatting the directive in the first rule, and skip the second rule. Another is to add more rules to format the preprocessor directive.
 
 ---
 
