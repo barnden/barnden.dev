@@ -5,7 +5,7 @@ date:   2021-06-16 20:20:20
 categories: python pandas numpy baseball stats
 math: true
 ---
-A quick statistic to use when judge pitchers on is their earned run average (ERA); it is the rate at which (earned) runs are given up per nine innings. This is quite lacking on its own, because not all ballparks are equal. It is easier to score runs at Coors than it is at Shea, ergo, a higher ERA is to be expected from a Coors pitcher than one at Shea.
+A quick statistic to judge pitchers by is earned run average (ERA); it is the number of earned runs given up per nine innings. This is quite lacking on its own, because not all ballparks are equal. It is easier to score runs at Coors than it is at Shea, therefore, a higher ERA is to be expected from a Coors pitcher than one at Shea.
 
 ## Terminology
 To account for these park biases, we use the park factor, which according to [FanGraphs](https://library.fangraphs.com/park-factors-5-year-regressed/) is:
@@ -38,6 +38,10 @@ $$
 \text{ERA+} = \text{PF} \cdot \frac{\text{lgERA}}{\text{ERA}}
 $$
 
+Where:
+- $$\text{lgERA}$$ is the average ERA for the league
+- $$\text{lgERA}$$ is the ERA of the pitcher in question
+
 This statistic tells how much worse the league average is in comparison to a certain pitcher; a larger ERA+ is better. With the league average being around 100, and an ERA+ of 105 meaning that the league, on average, is 5% worse than the pitcher.
 
 ERA+ takes advantage of the park factor, so the 3-yr. rolling avg. PF for Coors is 116, and for Miller (American Family) Field the PF is 100. So two pitchers with an ERA of 4.50, one at Coors and one at Miller might seem to be the same using ERA, but with ERA+ we notice that the Coors pitcher is 16% better than the one at Miller.
@@ -49,6 +53,8 @@ ERA+ might be good for comparing pitchers, but it's not the best for comparing a
 $$
 \text{ERA-} = 100 \cdot \frac{\text{ERA}}{\text{lgERA}} \cdot \left(2 - \frac{\text{PF}}{100}\right)
 $$
+
+Where $$\text{ERA}$$ and $$\text{lgERA}$$ mean the same here as they did in ERA+.
 
 Again, ERA- does take advantage of the park factor, but unlike ERA+, a lower ERA- is better. A pitcher with a 95 ERA- is 5% better than the league, on average. ERA- can also be used to compare pitchers against one another from different environments, taking Gibson's 1968 and Martinez's 2000 again: 38 vs 35.
 
@@ -148,7 +154,7 @@ data = pd.read_csv(
 )
 ```
 
-The `dtype` of ER and IP to be `Decimal` for fixed-point precision, as floating-points have accuracy issues that get compounded.
+The `dtype` of ER and IP is `Decimal` for fixed-point precision, as floating-points have accuracy issues that get compounded.
 
 Next, I created an `Inning` data type to process how IP is typically written, i.e. 1.1 IP is one and one-thirds innings pitched. So, 1.1 + 0.2 is 2.0 in IP algebra.
 
