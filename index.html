@@ -29,7 +29,7 @@ regenerate: true
     </ul>
     <h2 class="lead">other links &amp; projects</h2>
     <ul class="post-list">
-        {% for card in site.cards %}
+        {% for card in site.cards reversed %}
         {% if card.tags contains "featured" %}{% else %}
         <li>
             <div>
