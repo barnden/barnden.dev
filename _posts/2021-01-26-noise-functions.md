@@ -8,7 +8,7 @@ math: true
 
 excerpt: Generative art featuring Fractional Brownian Motion and Perlin/curl noise.
 ---
-<link rel="stylesheet" href="{{ "/assets/noise/noise.css" | relative_url }}">
+<link rel="stylesheet" href="{{ "/assets/projects/noise/noise.css" | relative_url }}">
 
 ## Perlin Noise
 My [implementation](https://github.com/barnden/barn-noise) is based on the Perlin code from ["Simplex noise demystified"](http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf) by Gustavson, and written using JavaScript.
@@ -191,4 +191,4 @@ The demonstrations below are rendered in real time, using particles originating 
 
 <script src="https://static.barnden.dev/barn-noise/noise.js"></script>
 <script src="https://static.barnden.dev/barn-noise/particle.js"></script>
-<script src="{{ "/assets/noise/noise_demo.js" | relative_url }}"></script>
+<script src="{{ "/assets/projects/noise/noise_demo.js" | relative_url }}"></script>
