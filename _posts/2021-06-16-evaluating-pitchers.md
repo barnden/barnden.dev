@@ -2,7 +2,7 @@
 layout: post
 title:  "Evaluating Pitchers Using Z-Score"
 date:   2021-06-16 20:20:20
-categories: python pandas numpy baseball stats
+categories: baseball stats python pandas numpy
 math: true
 ---
 A quick statistic to judge pitchers by is earned run average (ERA); it is the number of earned runs given up per nine innings. This is quite lacking on its own, because not all ballparks are equal. It is easier to score runs at Coors than it is at Shea, therefore, a higher ERA is to be expected from a Coors pitcher than one at Shea.
@@ -144,9 +144,13 @@ With a 196 zERA, deGrom is in the 98<sup>th</sup> percentile of all qualified (m
 
 As mentioned, zERA could be good to use across seasons, like to compare 1968 Gibson, 2000 Martinez, and 2021 deGrom (so far). While ERA- accounts for how much better a pitcher compared to the league, it ignores the distribution of players.
 
-For instance, Gibson had a great 1968 in which he posted a 1.12 ERA and 38 ERA-, while Martinez in 2000 had a 1.74 ERA and a 35 ERA-. Their ERA- demonstrates the effect that run environment has, Gibson beat out Martinez by 0.62 ERA, but was "worse" by 3 percentage points. Again, ERA- only compares against league average and does not tell just how much better they were than everyone else. Gibson had at least 9 other guys within 1 ERA of him, while Martinez only had 3 within the same mark. So, we would expect Martinez to have a better zERA as he had much fewer peers (pitchers within 1 ERA).
+| Name | Season | IP | ERA | ERA- | zERA |
+| :-: | :-: | :-: | :-: | :-: | :-: |
+| [Bob Gibson](https://www.baseball-reference.com/players/g/gibsobo01.shtml) | 1968 | 304.2 | 1.12 | 38 | 232 |
+| [Pedro Mart&iacute;nez](https://www.baseball-reference.com/players/m/martipe02.shtml) | 2001 | 217 | 1.74 | 35 | 243 |
+| [Jacob deGrom](https://www.baseball-reference.com/players/d/degroja01.shtml) | 2021 | 64 | 0.56 | 15 | 196 |
 
-Using the same cutoff of 1.2 IP/10 tm. gm., and using park factors for their relative seasons, Gibson's 1968 had a zERA of 232, and Martinez's 2000 had a zERA of 243. And 2021 deGrom with a 0.56 ERA and 15 ERA- blows Gibson and Martinez out of the water in those metrics. But, with a measly 196 zERA deGrom falls behind the former two.
+From the above table, we see that both deGrom's ERA and ERA- blows away Gibson's and Martinez's. However, deGrom's zERA is *only* 196 which is far behind the other two. zERA shows that both Gibson and Martinez were by far the best pitchers of their respective seasons, while deGrom still has a ways to go.
 
 deGrom's shortfall is mainly due to the fact that the 2021 season is only 70 games in, and he's being compared to the full 1968/2000 seasons. Overall pitcher quality will decrease over the course of the season as many will not be able to keep up the pace, and now with the ban on sticky substances coming into effect soon. This will further separate the elite from the average, meaning deGrom's zERA will increase (assuming he keeps up the pace).
 
