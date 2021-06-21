@@ -143,10 +143,10 @@ table {
 }
 
 button {
-    background: #1f1f29;
+    background: $default-background;
     border-radius: 0;
-    border: 1px solid #A64253;
-    padding: .35rem;
+    border: 1px solid $red;
+    padding: 0.35rem;
     color: $default-color;
     font-family: $serif;
 
