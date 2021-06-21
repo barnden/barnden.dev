@@ -17,14 +17,14 @@ cols = ['G', 'AB', 'R', 'H', '2B', '3B', 'HR', 'RBI', 'SB', 'CS', 'BB', 'SO', 'I
 
 The `Batting.csv` data set only includes these basic stats and preferably it would have more advanced metrics like OPS+ or wOBA that measures hits more indirectly. This way, we can build a model that takes into account the player's value rather than just taking counting stats at face value. As all the data is available to me, I should be able to calculate these statistics on my own, but that's out of the scope for this exercise.
 
-I decided to discard any statistics from the pre-war era (pre-1945), this is because the game's rules were drastically different in its early days (1850-1890s), and the dead-ball era (1900-1920) will affect the covariance matrix. I picked post-war because it is close to the integration era that started in 1947.
+I decided to discard any statistics from pre-integration (pre-1947), this is because the game's rules were drastically different in its early days (1850-1890s), and the dead-ball era (1900-1920) will affect the covariance matrix. Wide spread integration did not occur until later, but 1947 is the first year that Robinson played.
 
 ```py
 # Read all data
 orig_data = pd.read_csv("baseballdatabank-master/core/Batting.csv")
 
-# Keep only post-war stats
-batting_data = orig_data[orig_data.yearID >= 1945]
+# Keep only pre-integration stats
+batting_data = orig_data[orig_data.yearID >= 1947]
 
 # Copy over the statistically relevant columns
 data = batting_data[cols].copy()
