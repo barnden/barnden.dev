@@ -51,8 +51,14 @@ function main() {
     if (!gl)
         return;
 
-    document.getElementById("attractor-feature").classList.remove("hidden")
-    document.getElementById("attractor-feature-img").classList.add("hidden")
+    let feature = document.getElementById("attractor-feature")
+    let feature_img = document.getElementById("attractor-feature-img")
+
+    if (feature)
+        feature.classList.remove("hidden")
+
+    if (feature_img)
+        feature_img.classList.add("hidden")
 
     const update_program = createProgram(
         gl,
