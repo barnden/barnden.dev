@@ -6,8 +6,8 @@ regenerate: true
 
 <div class="home">
     <ul class="post-list">
-        {% for card in site.cards %}
-        {% if card.tags contains "featured"%}
+        {% for card in site.cards reversed %}
+        {% if card.tags contains "featured" %}
         <li class="feature">
             <div>
                 <span class="post-meta">{{ card.date | date: "%Y %B" }}</span>
