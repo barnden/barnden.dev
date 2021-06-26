@@ -1,0 +1,21 @@
+---
+title: "strange attractors"
+link: "https://barnden.dev/2021/06/attractors"
+tags: projects featured art math webgl2 glsl
+date: 2021-06-01 06:00:00
+---
+<div class="post-excerpt center">
+    <div id="attractor-feature" class="hidden">
+        <div class="container">
+            <canvas id="attractor-demo" class="demo" width="650" height="650"></canvas>
+        </div>
+        {% include attractor-shaders.html %}
+        <script src="{{ "/assets/projects/shaders/shader_feature.js" | relative_url }}"></script>
+    </div>
+    <img id="attractor-feature-img" class="demo" src="{{ "/assets/images/attractor.png" | relative_url }}" alt="Visualization of particles in a Halvorsen attractor.">
+    <hr>
+    <div class="center">
+        {% assign post = site.posts | where: "title", "Strange Attractors" | first %}
+        {{ post.excerpt }}
+    </div>
+</div>
