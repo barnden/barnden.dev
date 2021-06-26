@@ -12,9 +12,14 @@ function curl_feature_animation() {
     })()
 }
 
-curl_feature_animation()
+window.addEventListener("load", _ => {
+    const restart = document.getElementById("curl-restart")
 
-document.getElementById("curl-restart").addEventListener("click", curl_feature_animation)
-
-// Hide the large featured display if JavaScript is not enabled.
-document.getElementById("feature").classList.remove("hidden");
+    restart.classList.remove("hidden")
+    restart.addEventListener("click", _ => {
+        restart.innerHTML = "Restart Animation"
+        document.getElementById("noise-feature-img").classList.add("hidden")
+        document.getElementById("curl-feature").classList.remove("hidden")
+        curl_feature_animation()
+    })
+})

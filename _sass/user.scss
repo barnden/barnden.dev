@@ -1,5 +1,5 @@
-#feature {
-    #curl-demo {
+.feature {
+    canvas.demo {
         flex-basis: 100%;
         border: 1px solid $border-1;
 
@@ -195,4 +195,12 @@ li.task-list-item {
     input[type=checkbox] {
         margin-right: 1em;
     }
+}
+
+.border {
+    border: 1px solid $border-0;
+}
+
+.pointer {
+    cursor: pointer;
 }
