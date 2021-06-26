@@ -2,15 +2,15 @@
 layout: post
 title:  "Strange Attractors"
 date:   2021-06-25 19:00:00
-categories: math webgl2 glsl
+categories: projects featured art math webgl2 glsl
 math: true
 ---
-[Strange attractors](https://en.wikipedia.org/wiki/Attractor#Strange_attractor) are very cool. They describe a state that a dynamical system tends towards over time for many initial conditions. Of all the attractors I've seen, the Halvorsen attractor is my favorite attractor.
+[Strange attractors](https://en.wikipedia.org/wiki/Attractor#Strange_attractor) describe a state that a dynamical system tends towards over time for many initial conditions. Of all the attractors I've seen, the Halvorsen attractor is my favorite attractor.
 
 ## Halvorsen Attractor
 
 <div class="flex-center">
-    <canvas class="border pointer" id="display" width="800" height="800"></canvas>
+    <canvas class="border pointer" id="attractor-demo" width="800" height="800"></canvas>
     <figcaption>Click and drag on the attractor to rotate it.</figcaption>
 </div>
 
@@ -197,115 +197,6 @@ void main()
 
 The frag shader is very simple, all it does is compute a linear gradient based on the z coordinate of the particle.
 
-<script type="text/x-fragment-shader" id="update-vs" markdown="0">
-#version 300 es
-precision highp float;
-
-uniform float u_Alpha;
-uniform float u_Speed;
-uniform sampler2D u_RgbNoise;
-
-in vec3 i_Position;
-
-out vec3 v_Position;
-
-vec3 get_velocity()
-{
-    vec3 velo = vec3(0.);
-
-    velo.x = -u_Alpha * i_Position.x
-             - 4. * i_Position.y
-             - 4. * i_Position.z
-             - i_Position.y * i_Position.y;
-
-    velo.y = -u_Alpha * i_Position.y
-             - 4. * i_Position.z
-             - 4. * i_Position.x
-             - i_Position.z * i_Position.z;
-
-    velo.z = -u_Alpha * i_Position.z
-             - 4. * i_Position.x
-             - 4. * i_Position.y
-             - i_Position.x * i_Position.x;
-
-    return velo;
-}
-
-void main()
-{
-    ivec2 uv = ivec2(int(i_Position[0]) % 512, int(i_Position[1]) % 512);
-    vec3 noise = texelFetch(u_RgbNoise, uv, 0).rgb / 255.;
-
-    vec3 pos = i_Position + get_velocity() * u_Speed;
-
-    pos = mix(pos, noise, float(length(pos) > 25.));
-    pos += noise;
-
-    v_Position = pos;
-}
-</script>
-<script type="text/x-fragment-shader" id="update-fs" markdown="0">
-#version 300 es
-precision highp float;
-
-void main()
-{
-    discard;
-}
-</script>
-<script type="text/x-fragment-shader" id="render-vs" markdown="0">
-#version 300 es
-precision highp float;
-
-uniform vec3 u_Angles;
-uniform vec3 u_Camera;
-uniform float u_Scale;
-
-in vec3 i_Position;
-
-mat3 get_perspective(vec3 angles)
-{
-    // Get the Perspective Projection
-    float cx = cos(angles.x),
-          cy = cos(angles.y),
-          cz = cos(angles.z),
-          sx = sin(angles.x),
-          sy = sin(angles.y),
-          sz = sin(angles.z);
-
-    // clang-format off
-    mat3 projection = mat3(
-        cy * cz               , cy * sz               , -sy    ,
-        sx * sy * cz - cx * sz, sx * sy * sz + cx * cz, sx * cy,
-        cx * sy * cz + sx * sz, cx * sy * sz - sx * cz, cx * cy
-    );
-    // clang-format on
-
-    return projection;
-}
-
-void main() {
-    mat3 projection = get_perspective(u_Angles);
-    vec3 rel_position = i_Position - u_Camera;
-
-    gl_Position = vec4(projection * rel_position, u_Scale);
-    gl_PointSize = 1.;
-}
-</script>
-<script type="text/x-fragment-shader" id="render-fs" markdown="0">
-#version 300 es
-precision highp float;
-
-out vec4 o_FragColor;
-
-void main()
-{
-    vec3 color1 = vec3(1., 0., 0.);
-    vec3 color2 = vec3(0., 0., 1.);
-
-    vec3 color = mix(color1, color2, gl_FragCoord[2]);
-
-    o_FragColor = vec4(color, 1.);
-}
-</script>
-<script src="https://static.barnden.dev/particles/js/main.js">
+{% include attractor-shaders.html %}
+<script src="{{ "/assets/projects/shaders/shader_feature.js" | relative_url }}"></script>
+<script src="{{ "/assets/projects/shaders/shader_demo.js" | relative_url }}"></script>
