@@ -1,13 +1,49 @@
 'use strict';
 
-const N = 100000
+let N = 100000
 
 let attributes = {
-    alpha: 1.89,
-    speed: 1 / 50,
-    angles: [0.57828, 5.8058, 0.],
-    scale: 15.,
-    camera: [0, 0, 0]
+    consts: [1.89],
+    speed: 1 / 80,
+    angles: [0.57828, 2.66421, 0.],
+    scale: 3.,
+    camera: [0, -0.5, 0],
+    ortho: [-4.75, 4.75, -4.75, 4.75, -4.75, 4.75]
+}
+
+function install_input_handler() {
+    const canvas = document.getElementById("attractor-demo")
+
+    let mouse_down = false
+    let shift_down = false
+    let last = [0, 0]
+
+    canvas.addEventListener("mousedown", e => {
+        mouse_down = true
+        last = [e.clientX, e.clientY]
+    })
+
+    document.addEventListener("mouseup", _ => mouse_down = false)
+    document.addEventListener("mousemove", e => {
+        if (!mouse_down)
+            return;
+
+        let deltaX = (last[0] - e.clientX) / 100
+        let deltaY = (last[1] - e.clientY) / 100
+
+        if (shift_down) {
+            attributes.camera[0] += deltaX
+            attributes.camera[1] += -deltaY
+        } else {
+            attributes.angles[0] += -deltaY
+            attributes.angles[1] += deltaX
+        }
+
+        last = [e.clientX, e.clientY]
+    })
+    document.addEventListener("keydown", e => shift_down |= e.key.toLowerCase() === "shift")
+    document.addEventListener("keyup", e => shift_down &= e.key.toLowerCase() !== "shift")
+    document.addEventListener("blur", _ => shift_down = mouse_down = false)
 }
 
 function createShader(gl, type, name) {
@@ -51,6 +87,8 @@ function main() {
     if (!gl)
         return;
 
+    install_input_handler()
+
     let feature = document.getElementById("attractor-feature")
     let feature_img = document.getElementById("attractor-feature-img")
 
@@ -79,7 +117,7 @@ function main() {
 
     const update_locations = {
         i_Position: gl.getAttribLocation(update_program, "i_Position"),
-        u_Alpha: gl.getUniformLocation(update_program, "u_Alpha"),
+        u_Consts: gl.getUniformLocation(update_program, "u_Consts"),
         u_Speed: gl.getUniformLocation(update_program, "u_Speed"),
         u_RgbNoise: gl.getUniformLocation(update_program, "u_RgbNoise"),
     }
@@ -89,6 +127,7 @@ function main() {
         u_Angles: gl.getUniformLocation(render_program, "u_Angles"),
         u_Camera: gl.getUniformLocation(render_program, "u_Camera"),
         u_Scale: gl.getUniformLocation(render_program, "u_Scale"),
+        u_Ortho: gl.getUniformLocation(render_program, "u_Ortho")
     }
 
     // Generate 3 * N random floats in [0, 1]
@@ -172,11 +211,11 @@ function main() {
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
-    let last = Date.now()
+    let last = performance.now()
     const frame_time = 1000 / 60
 
     let render = _ => {
-        const now = Date.now()
+        const now = performance.now()
         const delta = now - last
 
         // Limit to 60 FPS
@@ -191,7 +230,7 @@ function main() {
         gl.useProgram(update_program)
         gl.bindVertexArray(current.update)
 
-        gl.uniform1f(update_locations.u_Alpha, attributes.alpha)
+        gl.uniform1fv(update_locations.u_Consts, attributes.consts)
         gl.uniform1f(update_locations.u_Speed, attributes.speed)
 
         gl.activeTexture(gl.TEXTURE0)
@@ -209,9 +248,12 @@ function main() {
         gl.disable(gl.RASTERIZER_DISCARD)
 
         gl.useProgram(render_program)
+
         gl.uniform3f(render_locations.u_Angles, ...attributes.angles)
         gl.uniform3f(render_locations.u_Camera, ...attributes.camera)
         gl.uniform1f(render_locations.u_Scale, attributes.scale)
+        gl.uniform1fv(render_locations.u_Ortho, attributes.ortho)
+
         gl.bindVertexArray(current.render)
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
         gl.drawArrays(gl.POINTS, 0, N)

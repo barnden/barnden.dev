@@ -2,7 +2,7 @@
 #version 300 es
 precision highp float;
 
-uniform float u_Alpha;
+uniform float u_Consts[1];
 uniform float u_Speed;
 uniform sampler2D u_RgbNoise;
 
@@ -14,17 +14,17 @@ vec3 get_velocity()
 {
     vec3 velo = vec3(0.);
 
-    velo.x = -u_Alpha * i_Position.x
+    velo.x = -u_Consts[0] * i_Position.x
                 - 4. * i_Position.y
                 - 4. * i_Position.z
                 - i_Position.y * i_Position.y;
 
-    velo.y = -u_Alpha * i_Position.y
+    velo.y = -u_Consts[0] * i_Position.y
                 - 4. * i_Position.z
                 - 4. * i_Position.x
                 - i_Position.z * i_Position.z;
 
-    velo.z = -u_Alpha * i_Position.z
+    velo.z = -u_Consts[0] * i_Position.z
                 - 4. * i_Position.x
                 - 4. * i_Position.y
                 - i_Position.x * i_Position.x;
@@ -32,12 +32,13 @@ vec3 get_velocity()
     return velo;
 }
 
+
 void main()
 {
+    vec3 pos = i_Position + get_velocity() * u_Speed;
+
     ivec2 uv = ivec2(int(i_Position[0]) % 512, int(i_Position[1]) % 512);
     vec3 noise = texelFetch(u_RgbNoise, uv, 0).rgb / 255.;
-
-    vec3 pos = i_Position + get_velocity() * u_Speed;
 
     pos = mix(pos, noise, float(length(pos) > 25.));
     pos += noise;
@@ -61,6 +62,7 @@ precision highp float;
 uniform vec3 u_Angles;
 uniform vec3 u_Camera;
 uniform float u_Scale;
+uniform float u_Ortho[6];
 
 in vec3 i_Position;
 
@@ -85,11 +87,21 @@ mat3 get_perspective(vec3 angles)
     return projection;
 }
 
+mat4 get_orthographic()
+{
+    // Ortho 6-tuple: (left, right, bottom, top, near, far)
+    return mat4(
+        2. / (u_Ortho[1] - u_Ortho[0]), 0., 0., -(u_Ortho[1] + u_Ortho[0]) / (u_Ortho[1] - u_Ortho[0]),
+        0., 2. / (u_Ortho[3] - u_Ortho[2]), 0., -(u_Ortho[3] + u_Ortho[2]) / (u_Ortho[3] - u_Ortho[2]),
+        0., 0., -2. / (u_Ortho[5] - u_Ortho[4]), -(u_Ortho[5] + u_Ortho[4]) / (u_Ortho[5] - u_Ortho[4]),
+        0., 0., 0., 1.);
+}
+
 void main() {
     mat3 projection = get_perspective(u_Angles);
     vec3 rel_position = i_Position - u_Camera;
 
-    gl_Position = vec4(projection * rel_position, u_Scale);
+    gl_Position = get_orthographic() * vec4(projection * rel_position, u_Scale);
     gl_PointSize = 1.;
 }
 </script>
