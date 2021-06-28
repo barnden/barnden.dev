@@ -9,16 +9,15 @@
     {% endif %}
 
     <meta charset="UTF-8">
-    <meta>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     {% if page.excerpt %}
     <meta name="og:description" content="{{ page.excerpt | strip_html | escape }}">
     {% else %}
-    <meta name="og:description" content="Brandon G. Nguyen's portfolio site.">
+    <meta name="og:description" content="{{ site.description }}">
     {% endif%}
-    <meta property="og:site_name" content="Brandon G. Nguyen's Website">
+    <meta property="og:site_name" content="{{ site.title }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ page.url | absolute_url }}">
 
