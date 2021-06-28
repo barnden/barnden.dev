@@ -9,8 +9,10 @@ date: 2021-06-01 06:00:00
         <div class="container">
             <canvas id="attractor-demo" class="demo pointer" width="650" height="650"></canvas>
         </div>
-        {% include attractor-shaders.html %}
-        <script src="{{ "/assets/projects/shaders/shader_feature.js" | relative_url }}"></script>
+        {% include attractor-demo.html %}
+        {% include attractor.html %}
+        <script src="{{ "/assets/projects/shaders/demo.js" | relative_url }}"></script>
+        <script src="{{ "/assets/projects/shaders/attractor.js" | relative_url }}"></script>
     </div>
     <img id="attractor-feature-img" class="demo" src="{{ "/assets/images/attractor.png" | relative_url }}" alt="Visualization of particles in a Halvorsen attractor.">
     <hr>
