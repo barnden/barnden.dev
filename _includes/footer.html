@@ -3,9 +3,9 @@
 
     <div class="wrapper">
         <ul class="contact-list">
-            <li><a href="mailto:{{ site.email }}" class="u-email">{{ site.email }}</a></li>
+            <li><a href="mailto:{{ site.email | escape }}" class="u-email">{{ site.email | escape }}</a></li>
             <li><a href="https://www.linkedin.com/in/{{ site.linkedin_username | escape }}" class="u-email">LinkedIn</a></li>
-            <li><a href="https://github.com/barnden">GitHub</a></li>
+            <li><a href="https://github.com/{{ site.github_username | escape }}">GitHub</a></li>
         </ul>
     </div>
 </footer>
