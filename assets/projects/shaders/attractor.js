@@ -1,50 +1,31 @@
 'use strict';
 
-let N = 100000
+const N = 100000
 
-let attributes = {
-    consts: [1.89],
-    speed: 1 / 80,
-    angles: [0.57828, 2.66421, 0.],
-    scale: 3.,
-    camera: [0, -0.5, 0],
-    ortho: [-4.75, 4.75, -4.75, 4.75, -4.75, 4.75]
+function get_perspective() {
+    const [cx, cy, cz] = attributes.angles.map(v => Math.cos(v))
+    const [sx, sy, sz] = attributes.angles.map(v => Math.sin(v))
+
+    return [
+        cy * cz, cy * sz, -sy,
+        sx * sy * cz - cx * sz, sx * sy * sz + cx * cz, sx * cy,
+        cx * sy * cz + sx * sz, cx * sy * sz - sx * cz, cx * cy
+    ]
 }
 
-function install_input_handler() {
-    const canvas = document.getElementById("attractor-demo")
+function get_orthographic() {
+    const [left, right, bottom, top, near, far] = attributes.ortho
 
-    let mouse_down = false
-    let shift_down = false
-    let last = [0, 0]
-
-    canvas.addEventListener("mousedown", e => {
-        mouse_down = true
-        last = [e.clientX, e.clientY]
-    })
-
-    document.addEventListener("mouseup", _ => mouse_down = false)
-    document.addEventListener("mousemove", e => {
-        if (!mouse_down)
-            return;
-
-        let deltaX = (last[0] - e.clientX) / 100
-        let deltaY = (last[1] - e.clientY) / 100
-
-        if (shift_down) {
-            attributes.camera[0] += deltaX
-            attributes.camera[1] += -deltaY
-        } else {
-            attributes.angles[0] += -deltaY
-            attributes.angles[1] += deltaX
-        }
-
-        last = [e.clientX, e.clientY]
-    })
-    document.addEventListener("keydown", e => shift_down |= e.key.toLowerCase() === "shift")
-    document.addEventListener("keyup", e => shift_down &= e.key.toLowerCase() !== "shift")
-    document.addEventListener("blur", _ => shift_down = mouse_down = false)
+    return [
+        2. / (right - left), 0., 0., -(right + left) / (right - left),
+        0., 2. / (top - bottom), 0., -(top + bottom) / (top - bottom),
+        0., 0., -2. / (far - near), -(far + near) / (far - near),
+        0., 0., 0., 1.
+    ]
 }
+
+let mat_perspective = get_perspective()
+let mat_orthographic = get_orthographic()
 
 function createShader(gl, type, name) {
     let shader = gl.createShader(type)
@@ -80,12 +61,48 @@ function createProgram(gl, shaders, transformFeedbackVaryings) {
     return program
 }
 
+function install_input_handler() {
+    const canvas = document.getElementById("attractor-demo")
+
+    let mouse_down = false
+    let shift_down = false
+    let last = [0, 0]
+
+    canvas.addEventListener("mousedown", e => {
+        mouse_down = true
+        last = [e.clientX, e.clientY]
+    })
+
+    document.addEventListener("mouseup", _ => mouse_down = false)
+    document.addEventListener("mousemove", e => {
+        if (!mouse_down)
+            return;
+
+        let deltaX = (last[0] - e.clientX) / 100
+        let deltaY = (last[1] - e.clientY) / 100
+
+        if (shift_down) {
+            attributes.camera[0] += deltaX
+            attributes.camera[1] += -deltaY
+        } else {
+            attributes.angles[0] += -deltaY
+            attributes.angles[1] += deltaX
+        }
+
+        mat_perspective = get_perspective()
+
+        last = [e.clientX, e.clientY]
+    })
+    document.addEventListener("keydown", e => shift_down |= e.key.toLowerCase() === "shift")
+    document.addEventListener("keyup", e => shift_down &= e.key.toLowerCase() !== "shift")
+}
+
 function main() {
     const canvas = document.getElementById("attractor-demo")
     const gl = canvas.getContext("webgl2")
 
     if (!gl)
-        return;
+        throw ("WebGL2 not supported")
 
     install_input_handler()
 
@@ -127,7 +144,8 @@ function main() {
         u_Angles: gl.getUniformLocation(render_program, "u_Angles"),
         u_Camera: gl.getUniformLocation(render_program, "u_Camera"),
         u_Scale: gl.getUniformLocation(render_program, "u_Scale"),
-        u_Ortho: gl.getUniformLocation(render_program, "u_Ortho")
+        u_Orthographic: gl.getUniformLocation(render_program, "u_Orthographic"),
+        u_Perspective: gl.getUniformLocation(render_program, "u_Perspective")
     }
 
     // Generate 3 * N random floats in [0, 1]
@@ -252,7 +270,9 @@ function main() {
         gl.uniform3f(render_locations.u_Angles, ...attributes.angles)
         gl.uniform3f(render_locations.u_Camera, ...attributes.camera)
         gl.uniform1f(render_locations.u_Scale, attributes.scale)
-        gl.uniform1fv(render_locations.u_Ortho, attributes.ortho)
+
+        gl.uniformMatrix4fv(render_locations.u_Orthographic, false, mat_orthographic)
+        gl.uniformMatrix3fv(render_locations.u_Perspective, false, mat_perspective)
 
         gl.bindVertexArray(current.render)
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
