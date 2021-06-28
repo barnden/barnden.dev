@@ -24,7 +24,11 @@ collections:
   #   output: true
   #   permalink: /:collection/:categories/:title
   #   label: "courses"
-  - cards
+  attractors:
+    output: true
+    permalink: /:collection/:title
+    label: "attractors"
+  cards:
 
 # Build settings
 plugins:
