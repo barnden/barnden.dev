@@ -7,24 +7,24 @@ permalink: /blog
 
 {% if site.posts.size > 0 %}
 <ul class="post-list">
-    {% assign date_format = "%Y %b. %-d" %}
     {% for post in site.posts %}
 
     {% assign categories = post.categories %}
-
     {% if post.hidden != true %}
-    <li>
-        <div>
-            <span class="post-meta">{{ post.date | date: date_format }}</span>
-            {% if categories.size > 0 %}
-            {% for category in categories %}
-            <span class="post-tag">{{ category }}</span>
-            {% endfor %}
-            {% endif %}
+    <li data-categories="{{post.categories | join: ',' | escape}}">
+        <div class="post-meta">
+            <span class="post-date">{{ post.date | date: "%Y %B" }}</span>
+            <div class="tags">
+                {% for category in post.categories %}
+                <span class="post-tag">{{ category | escape }}</span>
+                {% endfor %}
+            </div>
         </div>
+
         <div class="title">
-            <a href="{{ post.url | relative_url}}" class="post-link">{{ post.title | escape }}</a>
+            <a href="{{post.url | relative_url}}" class="post-link">{{ post.title | escape }}</a>
         </div>
+
         <div class="post-excerpt">{{ post.excerpt }}</div>
     </li>
     {% endif %}

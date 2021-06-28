@@ -9,11 +9,13 @@ regenerate: true
         {% for card in site.cards reversed %}
         {% if card.tags contains "featured" %}
         <li class="feature">
-            <div>
-                <span class="post-meta">{{ card.date | date: "%Y %B" }}</span>
-                {% for tag in card.tags %}
-                <span class="post-tag">{{ tag | escape }}</span>
-                {% endfor %}
+            <div class="post-meta">
+                <span class="post-date">{{ card.date | date: "%Y %B" }}</span>
+                <div class="tags">
+                    {% for tag in card.tags %}
+                    <span class="post-tag">{{ tag | escape }}</span>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="title">
@@ -32,11 +34,13 @@ regenerate: true
         {% for card in site.cards reversed %}
         {% if card.tags contains "featured" %}{% else %}
         <li>
-            <div>
-                <span class="post-meta">{{ card.date | date: "%Y %B" }}</span>
-                {% for tag in card.tags %}
-                <span class="post-tag">{{ tag | escape }}</span>
-                {% endfor %}
+            <div class="post-meta">
+                <span class="post-date">{{ card.date | date: "%Y %B" }}</span>
+                <div class="tags">
+                    {% for tag in card.tags %}
+                    <span class="post-tag">{{ tag | escape }}</span>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="title">
