@@ -3,36 +3,37 @@ layout: default
 ---
 <article>
     <header class="post-header">
-        <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-        <p class="post-meta">
-            {%- assign date_format = "%-d %b. %y" -%}
+        <h1 class="post-title" itemprop="name headline">{{ page.title | escape }}</h1>
+        <p class="post-date">
             <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-                {{ page.date | date: date_format}}
+                {{ page.date | date: site.date_format}}
             </time>
             {%- if page.modified_date -%}
-                <span class="dateModified">
-                    (Updated
-                    {%- assign mdate = page.modified_date | date_to_xmlschema -%}
-                    <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">
-                        {{ mdate | date: date_format }}
-                    </time>)
-                </span>
+            <span class="dateModified">
+                (Updated
+                {%- assign mdate = page.modified_date | date_to_xmlschema -%}
+                <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">
+                    {{ mdate | date: site.date_format }}
+                </time>)
+            </span>
             {%- endif -%}
             {%- if page.author -%}
-                • {% for author in page.author %}
-                    <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                        <span class="p-author h-card" itemprop="name">{{ author }}</span></span>
-                {%- if forloop.last == false %}, {% endif -%}
+            • {% for author in page.author %}
+            <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <span class="p-author h-card" itemprop="name">{{ author }}</span></span>
+            {%- if forloop.last == false %}, {% endif -%}
             {% endfor %}
-        {%- endif -%}</p>
+            {%- endif -%}
+        </p>
         <hr>
         <div class="breadcrumbs">
             <a href="/">home</a>
             / <a href="/notes">notes</a>
-        {% if page.semester == "spring21" %}
+            {% if page.semester == "spring21" %}
             / <a href="/notes#spring-2021">Spring 2021</a>
-        {% endif %}
-            / <a href="/courses/{{ page.categories | join: '/' | downcase}}">{{ page.categories | join: " " | upcase}}</a>
+            {% endif %}
+            / <a href="/courses/{{ page.categories | join: '/' | downcase}}">{{ page.categories | join: " " |
+                upcase}}</a>
             / <a href="{{ page.url }}">{{ page.title | escape }}</a>
         </div>
     </header>

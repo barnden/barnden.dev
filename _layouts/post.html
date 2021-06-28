@@ -1,35 +1,32 @@
 ---
 layout: default
 ---
-<article>
-    <header class="post-header">
-        <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-        <p class="post-meta">
-            {% assign date_fmt = "%Y %b. %-d" %}
-            <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{
-                page.date | date: date_fmt}}</time>
-            {% if page.modified_date %}
-            {% assign mdate = page.modified_date | date_to_xmlschema | date: date_fmt %}
-            <span class="dateModified">
-                (Updated
+<header class="post-header">
+    <p class="post-date">
+        <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{
+            page.date | date: site.date_format}}</time>
+        {% if page.modified_date %}
+        {% assign mdate = page.modified_date | date_to_xmlschema | date: site.date_format %}
+        <span class="dateModified">
+            (Updated
 
-                <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">{{ mdate }}</time>)
-            </span>
-        </p>
+            <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">{{ mdate }}</time>)
+        </span>
         {% endif %}
-        {% if page.categories %}
-        <div>
-            {% for category in page.categories %}
-            <span class="post-tag">{{ category }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
-        <hr>
-    </header>
-
-    <div class="post-content e-content" itemprop="articleBody">
-        {{ content }}
+    </p>
+    <h1 class="post-title" itemprop="name headline">{{ page.title | escape }}</h1>
+    {% if page.categories %}
+    <div class="post-tags">
+        {% for category in page.categories %}
+        <span class="post-tag">{{ category }}</span>
+        {% endfor %}
     </div>
+    {% endif %}
+    <hr>
+</header>
 
-    <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+<article class="post-content e-content" itemprop="articleBody">
+    {{ content }}
 </article>
+
+<a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
