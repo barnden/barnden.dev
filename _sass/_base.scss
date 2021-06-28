@@ -1,10 +1,3 @@
-html { font-size: 1rem; }
-
-body, html {
-    height: 100;
-    position: relative;
-}
-
 body, h1, h2, h3, h4, h5, h6,
 p, blockquote, pre, hr,
 dl, dd, ol, ul, figure {
@@ -28,12 +21,16 @@ body {
     min-height: 100vh;
     flex-direction: column;
     overflow-wrap: break-word;
+
+    position: relative;
 }
 
 h1, h2, h3, h4, h5, h6,
 p, blockquote, pre,
 ul, ol, dl, figure,
-%vertical-rhythm { margin-bottom: $spacing / 2; }
+%vertical-rhythm {
+    margin-bottom: $spacing / 2;
+}
 
 hr {
     border-color: $border-1;
@@ -45,14 +42,27 @@ img {
     vertical-align: middle;
 }
 
-figure > img { display: block; }
+figure > img {
+    display: block;
+}
 
-figcaption { font-size: .75rem; }
+figcaption {
+    font-size: .75rem;
+}
 
-ul, ol { margin-left: $spacing; }
-li { > ul, > ol { margin-bottom: 0; } }
+ul, ol {
+    margin-left: $spacing;
+}
 
-h1, h2, h3, h4, h5, h6 { font-weight: 400 }
+li {
+    > ul, > ol {
+        margin-bottom: 0;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
 
 a {
     color: $link-color;
@@ -104,12 +114,14 @@ pre {
 .page-content {
     max-width: 500px;
     margin: 0 auto;
-    padding: 0 0.5rem;
 
     @media screen and (min-width: 800px) {
         max-width: 800px;
-        padding: 0 1rem;
     }
+}
+
+.page-content {
+    padding-bottom: 6rem;
 }
 
 table {
@@ -151,7 +163,9 @@ button {
     color: $default-color;
     font-family: $serif;
 
-    &:hover { background: $border-1 }
+    &:hover {
+        background: $border-1;
+    }
 
     &:active {
         background: #16161D;
