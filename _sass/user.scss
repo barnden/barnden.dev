@@ -14,6 +14,7 @@
     }
 }
 
+ul.post-list > li > .tags,
 .flex-center {
     display: flex;
 
@@ -92,16 +93,19 @@
 
 ul.post-list {
     list-style-type: none;
-    margin: 1em 0;
 
-    li {
-        padding: 1rem;
+    & > li {
+        padding: 0.5rem 1rem;
         background-color: $default-background;
 
-        border: 1px solid $border-0;
+        border: 1px solid $border-1;
         border-radius: 6px;
-
         transition: border .5s ease;
+
+        & .post-meta .tags {
+            display: inline;
+            float: right;
+        }
 
         &:hover {
             border: 1px solid $border-2;
@@ -111,42 +115,33 @@ ul.post-list {
             margin-bottom: 1rem;
         }
 
-        & span.post-meta {
-            margin-right: 0.5rem;
-        }
-
-        & > div.title > a {
-            display: inline-block;
-
-            line-height: normal;
-            margin: 0.25rem 0;
-
+        & .title {
             font-weight: bold;
-            font-size: 1.125rem;
+            font-size: 1.15rem;
         }
 
-        &.feature > div.title > a {
-            font-size: 1.65rem;
-            margin: .75rem 0;
+        &.feature .title {
+            font-size: 1.35rem;
+            margin-bottom: .5rem;
         }
 
-        p {
+        p, a {
             display: inline;
         }
     }
 }
 
-span.post-tag {
+.post-tag {
     background: darken($default-background, 2%);
     color: darken($default-color, 15%);
 
     font-size: 0.875rem;
     font-family: $mono;
 
-    margin: 0 2px;
+    line-height: 1.1em;
     padding: 2px 4px;
 
-    border: 1px solid $border-3;
+    border: 1px solid $border-0;
     border-radius: 5px;
 }
 
@@ -157,7 +152,8 @@ h2.lead {
 
 .dateModified {
     display: block;
-    font-size: .7em;
+    font-size: 0.75em;
+    margin: 0.5em 0;
 }
 
 .breadcrumbs {
