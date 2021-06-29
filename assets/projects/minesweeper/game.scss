@@ -1,0 +1,82 @@
+---
+---
+$mono: "Fantasque Sans Mono", "Consolas", "Inconsolata", "Roboto Mono", monospace;
+
+$default-color: #dfe2e9;
+$default-background: #16161D;
+
+$link-color: #85BDBF;
+$link-hover: lighten($link-color, 15%);
+
+$border-0: lighten($default-background, 6.375%);
+$border-1: lighten($default-background, 15%);
+$border-2: lighten($default-background, 23.625%);
+$border-3: lighten($default-background, 32.25%);
+
+#ms-board {
+    border: 1px solid $border-0;
+
+    & button {
+        display: inline;
+
+        min-height: 36px;
+        min-width: 36px;
+        line-height: 36px;
+
+        font-size: 30px;
+
+        background: $default-background;
+        border: 1px solid $border-1;
+        border-radius: 0;
+
+        padding: 0;
+        margin: 0;
+
+        &.small {
+            min-height: 30px;
+            min-width: 30px;
+            line-height: 30px;
+
+            font-size: 24px
+        }
+
+        &.revealed {
+            background-color: $border-0;
+        }
+    }
+
+    & button:active {
+        background: $border-1;
+    }
+
+    & #ms-winner {
+        position: absolute;
+        left: 50%; top: 50%;
+
+        text-align: center;
+
+        & div {
+            position: relative;
+
+            left: -50%; top: -50%;
+            padding: 1rem;
+
+            background-color: $default-background;
+            border: 1px solid $border-1;
+        }
+    }
+}
+
+#ms-stats,
+button {
+    font-family: $mono;
+}
+
+#ms-stats {
+    margin-bottom: 0.25rem;
+    font-size: 26px;
+
+    .separator {
+        width: 1.5rem;
+    }
+}

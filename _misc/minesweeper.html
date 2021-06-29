@@ -1,0 +1,70 @@
+---
+title: "Minesweeper"
+date: 2021-06-28 18:00:00
+categories: projects game
+excerpt: It's minesweeper.
+---
+<!DOCTYPE html>
+<html lang="en">
+{% include head.html %}
+
+<body>
+    {% include header.html %}
+
+    <main class="page-content" aria-label="Content">
+        <header class="post-header">
+            <p class="post-date">
+                <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{
+                    page.date | date: site.date_format}}</time>
+                {% if page.modified_date %}
+                {% assign mdate = page.modified_date | date_to_xmlschema | date: site.date_format %}
+                <span class="dateModified">
+                    (Updated
+
+                    <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">{{ mdate }}</time>)
+                </span>
+                {% endif %}
+            </p>
+            <h1 class="post-title" itemprop="name headline">{{ page.title | escape }}</h1>
+            {% if page.categories %}
+            <div class="post-tags">
+                {% for category in page.categories %}
+                <span class="post-tag">{{ category }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <hr>
+        </header>
+
+        <article class="post-content e-content" itemprop="articleBody">
+            {{ page.excerpt }}
+        </article>
+
+        <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+    </main>
+
+    <div class="flex-center">
+        <div class="ms-container">
+            <div id="ms-stats" class="flex-center">
+                <select autocomplete="off" onchange="ms.difficulty(this.options[this.selectedIndex])">
+                    <option value="1">Easy</option>
+                    <option value="2" selected>Medium</option>
+                    <option value="3">Hard</option>
+                </select>
+                <div class="separator"></div>
+                <span style="color: #f00;">&#x2691;</span>x<span id="ms-flags">40</span>
+                | <span id="ms-time">0</span>s
+                <div class="separator"></div>
+                <button onclick="ms.generate(-1)">Restart</button>
+            </div>
+            <div id="ms-board"></div>
+        </div>
+    </div>
+
+    {% include footer.html %}
+
+    <link rel="stylesheet" href="{{ "/assets/projects/minesweeper/game.css" | relative_url }}">
+    <script src="{{ "/assets/projects/minesweeper/game.js" | relative_url }}"></script>
+</body>
+
+</html>
