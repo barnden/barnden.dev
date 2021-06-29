@@ -8,9 +8,8 @@ math: true
 [Strange attractors](https://en.wikipedia.org/wiki/Attractor#Strange_attractor) describe a state that a dynamical system tends towards over time for many initial conditions. Of all the attractors I've seen, the Halvorsen attractor is my favorite attractor.
 
 ## Halvorsen Attractor
-
 <div class="flex-center">
-    <canvas class="border pointer" id="attractor-demo" width="800" height="800"></canvas>
+    <canvas class="border pointer demo" id="attractor-demo" width="800" height="800"></canvas>
     <figcaption>Click and drag on the attractor to rotate it.</figcaption>
 </div>
 
@@ -27,6 +26,14 @@ $$
 $$
 
 Where $$\alpha$$ is some constant, for the demo above it is equal to 1.89.
+
+### Other Attractors
+- [Thomas' cyclically symmetric attractor]({{ "/attractors/thomas" | relative_url }})
+- [Dadras' attractor]({{ "/attractors/dadras" | relative_url }})
+- [Sprott attractor]({{ "/attractors/sprott" | relative_url }})
+- [Lorenz attractor]({{ "/attractors/lorenz" | relative_url }})
+
+The full source for the above demos is [available on GitHub](https://github.com/barnden/particles).
 
 ---
 
@@ -46,7 +53,7 @@ Below is the vertex shader for computing the particle's position.
 #version 300 es
 precision highp float;
 
-uniform float u_Alpha;
+uniform float u_Consts[1];
 uniform float u_Speed;
 uniform sampler2D u_RgbNoise;
 
@@ -56,7 +63,7 @@ out vec3 v_Position;
 ```
 
 The uniform inputs:
-- `u_Alpha` is the $$\alpha$$ parameter inside the Halvorsen equations.
+- `u_Consts` is an array containing the $$\alpha$$ parameter inside the Halvorsen equations.
 - `u_Speed` is a scalar that is used for scaling the velocity vector.
 - `u_RgbNoise` is an RGB texture with random byte values for each color channel.
 
@@ -133,6 +140,7 @@ precision highp float;
 uniform vec3 u_Angles;
 uniform vec3 u_Camera;
 uniform float u_Scale;
+uniform float u_Ortho[6];
 
 in vec3 i_Position;
 ```
@@ -141,6 +149,7 @@ The uniform inputs:
 - `u_Angles` is a vector containing [Tait-Bryan angles](https://en.wikipedia.org/wiki/Euler_angles#Tait%E2%80%93Bryan_angles) (describes the object's rotation).
 - `u_Camera` is a vector containing the camera's coordinates in Cartesian coordinates.
 - `u_Scale` is a scalar describing the $$w$$ coordinate for the particle's [Homogeneous coordinates](https://en.wikipedia.org/wiki/Homogeneous_coordinates).
+- `u_Ortho` is a 6-tuple (array) containing the clipping bounds for [Orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection).
 
 ```glsl
 mat3 get_perspective()
@@ -153,7 +162,7 @@ mat3 get_perspective()
           sz = sin(u_Angles.z);
 
     mat3 projection = mat3(
-        cy * cz               , cy * sz               , -sy    ,
+        cy * cz, cy * sz, -sy,
         sx * sy * cz - cx * sz, sx * sy * sz + cx * cz, sx * cy,
         cx * sy * cz + sx * sz, cx * sy * sz - sx * cz, cx * cy
     );
@@ -162,19 +171,65 @@ mat3 get_perspective()
 }
 ```
 
-The `get_persective()` function computes the [Perspective projection matrix](https://en.wikipedia.org/wiki/3D_projection#Perspective_projection) using the Tait-Bryan angles. The projection matrix allows us to transform the relative position from Cartesian space to clip space.
+The `get_perspective()` function computes the following [projection matrix](https://en.wikipedia.org/wiki/3D_projection#Perspective_projection):
 
-In the `main()` function below, we first compute the projection matrix and the relative position (particle position minus camera position). Then, we compute `gl_Position` by setting the x, y, and z the transformed coordinates, and the w coordinate to `u_Scale`.
+$$
+\begin{bmatrix}
+    1 & 0 & 0\\
+    0 & \cos(\theta_x) & \sin(\theta_x)\\
+    0 & -\sin(\theta_x) & \cos(\theta_x)
+\end{bmatrix}
+\begin{bmatrix}
+\cos(\theta_y) & 0 & -\sin(\theta_y)\\
+0 & 1 & 0\\
+\sin(\theta_y) & 0 & \cos(\theta_y)
+\end{bmatrix}
+\begin{bmatrix}
+\cos(\theta_z) & \sin(\theta_z) & 0\\
+-\sin(\theta_z) & \cos(\theta_z) & 0\\
+0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+x\\y\\z
+\end{bmatrix}
+$$
+
+The $$\vec{\theta} = \langle\theta_x, \theta_y, \theta_z\rangle$$ are Tait-Bryan angles describing the object's rotation in space. This matrix allows us to transform a particle's 3D coordinates to get the orientation that we want.
+
+```glsl
+mat4 get_orthographic()
+{
+    // Ortho 6-tuple: (left, right, bottom, top, near, far)
+    return mat4(
+        1. / (u_Ortho[1] - u_Ortho[0]), 0., 0., -(u_Ortho[1] + u_Ortho[0]) / (u_Ortho[1] - u_Ortho[0]),
+        0., 2. / (u_Ortho[3] - u_Ortho[2]), 0., -(u_Ortho[3] + u_Ortho[2]) / (u_Ortho[3] - u_Ortho[2]),
+        0., 0., -2. / (u_Ortho[5] - u_Ortho[4]), -(u_Ortho[5] + u_Ortho[4]) / (u_Ortho[5] - u_Ortho[4]),
+        0., 0., 0., 1.);
+}
+```
+
+The `get_orthographic()` function computes the orthographic projection matrix, given `u_Ortho` 6-tuple of $$(L, R, B, T, N, F)$$
+
+$$
+\begin{bmatrix}
+\frac{2}{R - L} & 0 & 0 & \frac{L + R}{2}\\
+0 & \frac{T - B}{2} & 0 & \frac{T + B}{2}\\
+0 & 0 & \frac{F - N}{-2} & -\frac{F + N}{2}\\
+0 & 0 & 0 & 1
+\end{bmatrix}
+$$
+
+The 6-tuple defines clipping planes, and the matrix allows us to transform the particle's coordinates into clip space.
 
 ```glsl
 void main() {
-    mat3 projection = get_perspective();
     vec3 rel_position = i_Position - u_Camera;
 
-    gl_Position = vec4(projection * rel_position, u_Scale);
+    gl_Position = get_orthographic() * vec4(get_perspective() * rel_position, u_Scale);
     gl_PointSize = 1.;
 }
 ```
+In the `main()`, we first compute `rel_position` which is the particle's position vector minus the camera's position vector. Then, we apply the perspective projection matrix on `rel_position` and create Homogeneous coordinates by making `u_Scale` the $$w$$ component. Finally, we set `gl_Position` to the product of the orthographic projection matrix with the perspective.
 
 ### Rendering - Frag Shader
 
@@ -195,8 +250,9 @@ void main()
 }
 ```
 
-The frag shader is very simple, all it does is compute a linear gradient based on the z coordinate of the particle.
+The frag shader is very simple, all it does is compute a linear gradient based on the $$z$$ coordinate of the particle.
 
-{% include attractor-shaders.html %}
-<script src="{{ "/assets/projects/shaders/shader_feature.js" | relative_url }}"></script>
-<script src="{{ "/assets/projects/shaders/shader_demo.js" | relative_url }}"></script>
+{% include attractor-demo.html %}
+{% include attractor.html %}
+<script src="{{ "/assets/projects/shaders/demo.js" | relative_url }}"></script>
+<script src="{{ "/assets/projects/shaders/attractor.js" | relative_url }}"></script>
