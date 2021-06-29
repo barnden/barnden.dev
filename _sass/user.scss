@@ -2,8 +2,6 @@
     .demo {
         flex-basis: 100%;
         border: 1px solid $border-1;
-
-        max-width: 100%;
     }
 
     .description {
@@ -12,6 +10,10 @@
 
         button { margin-top: 1.5em; }
     }
+}
+
+.demo {
+    max-width: 100%;
 }
 
 ul.post-list > li > .tags,
