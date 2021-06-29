@@ -1,0 +1,32 @@
+---
+layout: page
+regenerate: true
+title: Miscellaneous
+permalink: /misc
+excerpt: a
+---
+
+<ul class="post-list">
+    {% for post in site.misc %}
+
+    {% assign categories = post.categories %}
+    {% if post.hidden != true and post.title != "Miscellaneous" %}
+    <li data-categories="{{post.categories | join: ',' | escape}}">
+        <div class="post-meta">
+            <span class="post-date">{{ post.date | date: site.date_format }}</span>
+            <div class="tags">
+                {% for category in post.categories %}
+                <span class="post-tag">{{ category | escape }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="title">
+            <a href="{{post.url | relative_url}}" class="post-link">{{ post.title | escape }}</a>
+        </div>
+
+        <div class="post-excerpt">{{ post.excerpt }}</div>
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>

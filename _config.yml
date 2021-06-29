@@ -28,6 +28,9 @@ collections:
     output: true
     permalink: /:collection/:title
     label: "attractors"
+  misc:
+    output: true
+    permalink: /:collection/:title
   cards:
 
 # Build settings
