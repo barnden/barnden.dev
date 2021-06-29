@@ -1,0 +1,198 @@
+---
+---
+$mono: "Fantasque Sans Mono", "Consolas", "Inconsolata", "Roboto Mono", monospace;
+
+$default-color: #dfe2e9;
+$default-background: #16161D;
+
+$link-color: #85BDBF;
+$link-hover: lighten($link-color, 15%);
+
+$border-0: lighten($default-background, 6.375%);
+$border-1: lighten($default-background, 15%);
+$border-2: lighten($default-background, 23.625%);
+$border-3: lighten($default-background, 32.25%);
+
+.colorblind .card {
+    &.red { color: #0492C2 !important }
+    &.green { color: #DBA31F !important }
+}
+
+#sh-container {
+    max-width: 880px;
+    padding: 10px;
+    border: 1px solid $border-1;
+
+    & .controls .input {
+        margin: 0 0.5em;
+        padding: 0;
+    }
+}
+
+#sh-shenzhen {
+    display: flex;
+    flex-wrap: wrap;
+
+    font-family: $mono;
+    position: relative;
+
+    & .win {
+        position: absolute;
+        left: 50%; top: 50%;
+
+        text-align: center;
+
+        & div {
+            position: relative;
+
+            left: -50%; top: -50%;
+            padding: 1rem;
+
+            background: $default-background;
+            border: 1px solid $border-3;
+        }
+    }
+
+    & #sh-stores {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 0 0 100%;
+
+        justify-content: center;
+
+        height: 160px;
+        padding-top: 5px;
+
+        margin: 0;
+
+        & .col {
+            min-height: 100%;
+        }
+
+        & #sh-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            min-width: 80px;
+
+            margin: 0 5px 0 10px;
+
+            & button {
+                padding: 10px;
+
+                margin: 5px 0;
+
+                min-height: 1rem;
+                min-width: 3rem;
+            }
+        }
+
+        & #sh-trays,
+        & #sh-bins {
+            display: flex;
+
+            & .col {
+                flex: 0 0;
+                border: 1px solid $border-2;
+                border-radius: 10px;
+
+                min-width: 95px;
+
+                padding: 0;
+                margin: 0 5px;
+
+                &.flower {
+                    margin-right: 20px;
+
+                    &::after {
+                        color: lighten($default-background, 50%);
+                        content: "FLOWER"
+                    }
+                }
+            }
+        }
+    }
+
+    & .col {
+        display: flex;
+        flex: 1;
+
+        align-self: stretch;
+
+        align-items: center;
+        justify-content: center;
+
+        min-height: 440px;
+
+        padding: 10px;
+        margin: 12px 2px 22px 2px;
+
+        border: 1px solid $border-0;
+        border-radius: 3px;
+    }
+
+    & .card {
+        position: absolute;
+
+        background: lighten($default-background, 1.5%);
+        border-radius: 10px;
+        border: 1px solid $border-3;
+        height: 150px;
+        width: 80px;
+
+        font-size: 1.4rem;
+        line-height: 1em;
+
+        &.red { color: #B44557 }
+        &.green { color: #679271 }
+        &.black { color: $default-color }
+
+        &::after {
+            position: absolute;
+            bottom: .15em; right: .15em;
+        }
+
+        &::before {
+            position: absolute;
+            top: .15em; left: .15em;
+        }
+
+        @for $i from 1 through 9 {
+            &.card-#{$i} {
+                &::after, &::before {
+                    content: "#{$i}";
+                }
+            }
+        }
+
+        @for $i from 10 through 13 {
+            &.card-#{$i} {
+                &.flip {
+                    &::after, &::before { content: "X" }
+                }
+
+                &::after, &::before {
+                    content: "D";
+                }
+            }
+        }
+
+        &.card-f { &::after, &::before { content: "F" } }
+    }
+
+    label { color: #FFF }
+    button:disabled {
+        color: $border-1;
+
+        &:hover {
+            background: $default-background;
+        }
+    }
+    button:enabled {
+        color: $default-color;
+    }
+}
