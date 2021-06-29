@@ -13,7 +13,7 @@ permalink: /blog
     {% if post.hidden != true %}
     <li data-categories="{{post.categories | join: ',' | escape}}">
         <div class="post-meta">
-            <span class="post-date">{{ post.date | date: "%Y %B" }}</span>
+            <span class="post-date">{{ post.date | date: site.date_format }}</span>
             <div class="tags">
                 {% for category in post.categories %}
                 <span class="post-tag">{{ category | escape }}</span>
