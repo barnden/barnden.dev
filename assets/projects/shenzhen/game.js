@@ -73,7 +73,7 @@ class Card {
         if (col instanceof Column && col.element != this.parent && (!verify || col.verify(this))) {
             this.col.remove(this)
             col.add(this, false, offset_x, offset_y)
-            this.slide(...this.initial, this.focus)
+            this.slide()(...this.initial, this.focus)
 
             return true
         }
@@ -84,37 +84,41 @@ class Card {
     reattach() {
         if (this._mouseup) {
             let ret = this._mouseup()
+
             if (ret instanceof Array && ret.length) {
                 let children = this.children.slice()
-                let m = this.move(ret[0], true)
+                let move_success = this.move(ret[0], true)
 
-                if (children.length && m)
+                if (children.length && move_success)
                     children.forEach(child => child.move(ret[0], true))
 
-                return m
+                return move_success
             }
         }
 
         return false
     }
 
-    slide = (x, y, z) => {
-        let xn = x - this.card.offsetLeft
-        let yn = y - this.card.offsetTop
+    slide() {
+        return (x, y, z) => {
+            let xn = x - this.card.offsetLeft
+            let yn = y - this.card.offsetTop
 
-        if (!xn && !yn) return this.z = z
+            if ((xn + yn) == 0)
+                return this.z = z
 
-        this.card.style.transform = `translate(${xn}px,${yn}px)`
-        this.card.style.transition = `transform ${.15 * (fast ? .5 : 1)}s ease`
+            this.card.style.transform = `translate(${xn}px,${yn}px)`
+            this.card.style.transition = `transform ${.15 * (fast ? .5 : 1)}s ease`
 
-        setTimeout(_ => {
-            this.card.style.transform = null
-            this.card.style.transition = null
-            this.card.style.zIndex = z
+            setTimeout(_ => {
+                this.card.style.transform = null
+                this.card.style.transition = null
+                this.card.style.zIndex = z
 
-            this.x = x
-            this.y = y
-        }, (fast ? .5 : 1) * 160)
+                this.x = x
+                this.y = y
+            }, (fast ? .5 : 1) * 160)
+        }
     }
 
     generate_card() {
@@ -132,11 +136,11 @@ class Card {
             if (this.reattach())
                 return false
 
-            this.slide(...this.initial, this.focus)
+            this.slide()(...this.initial, this.focus)
 
             if (this.children.length)
                 this.children.forEach(
-                    child => child.slide(...child.initial, child.focus)
+                    child => child.slide()(...child.initial, child.focus)
                 )
 
             return false
@@ -337,7 +341,6 @@ class Shenzhen {
         this.bins = get("bins")
 
         this.cards = []
-        this.z = 0
 
         this.rules = {
             // rules define the set of exclusions
@@ -373,36 +376,38 @@ class Shenzhen {
     generate_columns() {
         this.columns = []
 
+        let params = [0, this.drag.bind(this), this.lift.bind(this), this.check.bind(this)]
+
         for (let i = 0; i < 8; i++) {
-            let col = new Column(i, this.rules, this.z, this.drag, this.lift, this.check)
+            let col = new Column(i, this.rules, ...params)
             this.columns.push(col)
             this.board.appendChild(col.element)
         }
 
         for (let i = 8; i < 11; i++) {
-            let tray = new Tray(i, this.z, this.drag, this.lift, this.check)
+            let tray = new Tray(i, ...params)
             this.columns.push(tray)
             this.trays.appendChild(tray.element)
         }
 
-        let flower_bin = new FlowerBin(11, this.z, this.drag, this.lift, this.check)
+        let flower_bin = new FlowerBin(11, ...params)
         this.columns.push(flower_bin)
         this.bins.appendChild(flower_bin.element)
 
         for (let i = 12; i < 15; i++) {
-            let bin = new Bin(i, this.z, this.drag, this.lift, this.check)
+            let bin = new Bin(i, ...params)
             this.columns.push(bin)
             this.bins.appendChild(bin.element)
         }
     }
 
-    drag = e => {
+    drag(e) {
         for (let el of document.elementsFromPoint(e.clientX, e.clientY))
             if (Array.from(el.classList).includes("col") && this.focused != el)
                 this.focused = el
     }
 
-    lift = _ => {
+    lift() {
         if (this.focused != undefined) {
             let focused = this.focused
             this.focused = undefined
@@ -411,7 +416,7 @@ class Shenzhen {
         }
     }
 
-    check = _ => {
+    check() {
         if (this.moves) return
 
         let empty = 0
@@ -536,9 +541,10 @@ class Shenzhen {
         for (let index of this.dragons[dragon]) {
             let column = this.columns[index]
 
-            movable &&= !!column.count
-                && column.last.color == dragon
-                && parseInt(column.last.number || 0) > 9
+            movable = movable &&
+                !!column.count &&
+                column.last.color == dragon &&
+                parseInt(column.last.number || 0) > 9
         }
 
         if (!movable)
@@ -554,7 +560,7 @@ class Shenzhen {
         }
     }
 
-    restart = _ => {
+    restart() {
         let popups = Array.from(document.getElementsByClassName("sh-popup"))
 
         if (popups.length)
@@ -568,9 +574,7 @@ class Shenzhen {
             this.columns.forEach(col => col.element.remove())
 
         this.generate_columns()
-
         this.generate_cards()
-
         this.check()
     }
 
@@ -592,4 +596,4 @@ class Shenzhen {
 
 let game = new Shenzhen()
 
-window.addEventListener("load", game.restart)
+window.addEventListener("load", game.restart.bind(game))
