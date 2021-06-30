@@ -68,6 +68,7 @@ $border-3: lighten($default-background, 32.25%);
 }
 
 #ms-stats,
+#ms-board,
 button {
     font-family: $mono;
 }
@@ -75,6 +76,10 @@ button {
 #ms-stats {
     margin-bottom: 0.25rem;
     font-size: 26px;
+
+    & button {
+        font-size: 20px;
+    }
 
     .separator {
         width: 1.5rem;
