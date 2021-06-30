@@ -14,16 +14,7 @@ excerpt: It's minesweeper.
     <main class="page-content" aria-label="Content">
         <header class="post-header">
             <p class="post-date">
-                <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{
-                    page.date | date: site.date_format}}</time>
-                {% if page.modified_date %}
-                {% assign mdate = page.modified_date | date_to_xmlschema | date: site.date_format %}
-                <span class="dateModified">
-                    (Updated
-
-                    <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">{{ mdate }}</time>)
-                </span>
-                {% endif %}
+                <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: site.date_format }}</time>
             </p>
             <h1 class="post-title" itemprop="name headline">{{ page.title | escape }}</h1>
             {% if page.categories %}
