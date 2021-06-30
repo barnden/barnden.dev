@@ -1,77 +1,95 @@
 class Draggable {
-    constructor (interactive, parent) {
-        if (!(interactive instanceof Element))
-            throw new Exception("[Drag] Expected HTML Element.")
+    constructor(draggable, parent) {
+        if (!(draggable instanceof HTMLElement))
+            throw "[Drag] Excpected HTMLElement for drag."
 
-        // Assume entire element is draggable.
         if (parent == undefined)
-            parent = interactive
+            parent = draggable
 
-        this.previous = [0,0]
-        this.draggable = interactive
+        this.prev = [0, 0]
+        this.draggable = draggable
         this.parent = parent
-        this.hooks = { mouseup: [], mousemove: [], mousedown: [] }
+
+        this.hooks = {
+            mouseup: [],
+            mousemove: [],
+            mousedown: []
+        }
 
         this.setup()
     }
 
     setup() {
-        this.draggable.addEventListener("mousedown", this.start)
-        this.draggable.addEventListener("touchstart", this.start)
+        this.draggable.addEventListener("mousedown", this.start())
+        this.draggable.addEventListener("touchstart", this.start())
 
-        document.addEventListener("mouseup", this.stop)
-        document.addEventListener("touchend", this.stop)
+        document.addEventListener("mouseup", this.stop())
+        document.addEventListener("touchend", this.stop())
     }
 
-    start = e => {
-        e.preventDefault()
+    start() {
+        if (this.start_handler != undefined)
+            return this.start_handler
 
-        // only activate on lmb
-        if (e.buttons != 1 && typeof e.touches == "undefined")
-            return
+        this.start_handler = e => {
+            e.preventDefault()
 
-        // don't double drag
-        if (this.parent.hasAttribute("data-dragged"))
-            return
+            // Only activate on left mouse click
+            if (e.buttons != 1 && typeof e.touches == "undefined")
+                return
 
-        let cancel = false
+            // Don't apply drag twice
+            if (this.parent.hasAttribute("data-dragged"))
+                return
 
-        if (this.hooks.mousedown.length)
-            for (let cb of this.hooks.mousedown)
-                cancel |= typeof(cb) == "function" ? cb(e) : 0
+            if (this.hooks.mousedown.length)
+                for (let callback of this.hooks.mousedown)
+                    if (typeof(callback) !== "function" || callback(e))
+                        return
 
-        if (cancel) return
-
-        this.onmousedown(e)
-    }
-
-    stop = e => {
-        if (this.parent.hasAttribute("data-dragged")) {
-            if (this.hooks.mouseup.length)
-                for (let cb of this.hooks.mouseup)
-                    if (typeof(cb) === "function")
-                        cb(e)
-
-            this.parent.removeAttribute("data-dragged")
-
-            document.removeEventListener("mousemove", this.drag)
-            document.removeEventListener("touchmove", this.drag)
+            this.onmousedown(e)
         }
+
+        return this.start_handler
     }
 
-    drag = e => {
-        e.preventDefault()
+    stop() {
+        if (this.stop_handler != undefined)
+            return this.stop_handler
 
-        let cancel = false
+        this.stop_handler = e => {
+            if (this.parent.hasAttribute("data-dragged")) {
+                if (this.hooks.mouseup.length)
+                    for (let callback of this.hooks.mouseup)
+                        if (typeof (callback) === "function")
+                            callback(e)
 
-        if (this.hooks.mousemove.length)
-            for (let cb of this.hooks.mousemove)
-                cancel |= typeof(cb) == "function" ? cb(e) : 0
+                this.parent.removeAttribute("data-dragged")
 
-        if (cancel)
-            return
+                document.removeEventListener("mousemove", this.drag())
+                document.removeEventListener("touchmove", this.drag())
+            }
+        }
 
-        this.onmousemove(e)
+        return this.stop_handler
+    }
+
+    drag() {
+        if (this.drag_handler != undefined)
+            return this.drag_handler
+
+        this.drag_handler = e => {
+            e.preventDefault()
+
+            if (this.hooks.mousemove.length)
+                for (let callback of this.hooks.mousemove)
+                    if (typeof(callback) !== "function" || callback(e))
+                        return
+
+            this.onmousemove(e)
+        }
+
+        return this.drag_handler
     }
 
     onmousedown(e) {
@@ -80,8 +98,8 @@ class Draggable {
             [e.clientX, e.clientY]
         this.parent.setAttribute("data-dragged", "data-dragged")
 
-        document.addEventListener("mousemove", this.drag)
-        document.addEventListener("touchmove", this.drag)
+        document.addEventListener("mousemove", this.drag())
+        document.addEventListener("touchmove", this.drag())
     }
 
     onmousemove(e) {
@@ -110,18 +128,21 @@ class Draggable {
         if (hooks)
             this.hooks = { mouseup: [], mousemove: [], mousedown: [] }
 
-        this.draggable.removeEventListener("mousedown", this.start)
-        this.draggable.removeEventListener("touchstart", this.start)
-        document.removeEventListener("mouseup", this.stop)
-        document.removeEventListener("touchend", this.stop)
-        document.removeEventListener("mousemove", this.drag)
-        document.removeEventListener("touchmove", this.drag)
+        this.draggable.removeEventListener("mousedown", this.start())
+        this.draggable.removeEventListener("touchstart", this.start())
+        document.removeEventListener("mouseup", this.stop())
+        document.removeEventListener("touchend", this.stop())
+        document.removeEventListener("mousemove", this.drag())
+        document.removeEventListener("touchmove", this.drag())
     }
 
-    add_hook(event, cb) { if (this.hooks.hasOwnProperty(event)) this.hooks[event].push(cb) }
-    remove_hook(event, cb) {
+    add_hook(event, callback) {
         if (this.hooks.hasOwnProperty(event))
-            if (this.hooks[event].includes(cb))
-                this.hooks[event].splice(this.hooks[event].indexOf(cb), 1)
+            this.hooks[event].push(callback)
+    }
+
+    remove_hook(event, callback) {
+        if (this.hooks.hasOwnProperty(event) && this.hooks[event].includes(callback))
+            this.hooks[event].splice(this.hooks[event].indexOf(callback), 1)
     }
 }
