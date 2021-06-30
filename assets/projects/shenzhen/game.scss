@@ -19,7 +19,17 @@ $border-3: lighten($default-background, 32.25%);
 }
 
 #sh-container {
+    min-width: 880px;
+    min-height: 640px;
+
     max-width: 880px;
+    max-height: 640px;
+
+    &,
+    & button {
+        font-family: $mono;
+    }
+
     padding: 10px;
     border: 1px solid $border-1;
 
@@ -33,7 +43,6 @@ $border-3: lighten($default-background, 32.25%);
     display: flex;
     flex-wrap: wrap;
 
-    font-family: $mono;
     position: relative;
 
     & .win {
@@ -97,7 +106,7 @@ $border-3: lighten($default-background, 32.25%);
 
             & .col {
                 flex: 0 0;
-                border: 1px solid $border-2;
+                border: 1px solid $border-0;
                 border-radius: 10px;
 
                 min-width: 95px;
