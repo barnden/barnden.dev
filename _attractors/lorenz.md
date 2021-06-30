@@ -27,29 +27,5 @@ $$\sigma = 10,\ \rho = 28,\ \beta = \frac{8}{3}$$
 
 [^1]: [Lorenz system on Wikipedia](https://en.wikipedia.org/wiki/Lorenz_system)
 
-<script type="text/x-fragment-shader" id="update-vs">
-#version 300 es
-precision highp float;
-
-uniform float u_Consts[3];
-uniform float u_Speed;
-uniform sampler2D u_RgbNoise;
-
-in vec3 i_Position;
-
-out vec3 v_Position;
-
-vec3 get_velocity()
-{
-    return vec3(
-        u_Consts[0] * (i_Position[1] - i_Position[0]),
-        u_Consts[1] * i_Position[0] - i_Position[0] * i_Position[2] - i_Position[1],
-        i_Position[0] * i_Position[1] - u_Consts[2] * i_Position[2]
-    );
-}
-
-void main()
-{
-    v_Position = i_Position + get_velocity() * u_Speed;
-}
-</script>
+<script type="text/x-fragment-shader" id="update-vs">#version 300 es
+precision highp float;uniform float u_Consts[3],u_Speed;uniform sampler2D u_RgbNoise;in vec3 i_Position;out vec3 v_Position;void main(){float a=i_Position.x,b=i_Position.y,c=i_Position.z,d[3]=u_Consts;v_Position = i_Position+vec3(d[0]*(b-a),d[1]*a-a*c-b,a*b-d[2]*c)*u_Speed;}</script>

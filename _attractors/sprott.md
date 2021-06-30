@@ -25,39 +25,5 @@ In the above demo the constant $$a = 2.07,\ b = 1.79$$.
 
 [^1]: [A dynamical system with a strange attractor and invariant tori. J.C. Sprott, 2014.](http://sprott.physics.wisc.edu/pubs/paper423.pdf)
 
-<script type="text/x-fragment-shader" id="update-vs">
-#version 300 es
-precision highp float;
-
-uniform float u_Consts[2];
-uniform float u_Speed;
-uniform sampler2D u_RgbNoise;
-
-in vec3 i_Position;
-
-out vec3 v_Position;
-
-vec3 get_velocity()
-{
-    float x2 = pow(i_Position.x, 2.);
-
-    return vec3(
-        i_Position.y + i_Position.x * (u_Consts[0] * i_Position.y + i_Position.z),
-        1. - u_Consts[1] * x2 + i_Position.y * i_Position.z,
-        i_Position.x - x2 - pow(i_Position.y, 2.)
-    );
-}
-
-void main()
-{
-    vec3 pos = i_Position + get_velocity() * u_Speed;
-
-    ivec2 uv = ivec2(int(i_Position[0]) % 512, int(i_Position[1]) % 512);
-    vec3 noise = (texelFetch(u_RgbNoise, uv, 0).rgb / 255.);
-
-    pos = mix(pos, noise, float(length(pos) > 25.));
-    pos += noise * 2.;
-
-    v_Position = pos;
-}
-</script>
+<script type="text/x-fragment-shader" id="update-vs">#version 300 es
+precision highp float;uniform float u_Consts[2],u_Speed;uniform sampler2D u_RgbNoise;in vec3 i_Position;out vec3 v_Position;void main(){float a=i_Position.x,b=i_Position.y,c=i_Position.z,d=pow(a,2.),e[2]=u_Consts;vec3 p=i_Position+vec3(b+a*(e[0]*b+c),1.-e[1]*d+b*c,a-d-pow(b,2.))*u_Speed,n=texelFetch(u_RgbNoise,ivec2(int(a)%512,int(b)%512),0).rgb/255.;v_Position=mix(p,n,float(length(p)>25.))+n*2.;}</script>
