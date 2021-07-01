@@ -1,5 +1,6 @@
 const MAX_INT = new Uint32Array(1).fill(-1)[0] + 1
 const BIN_OFFSET = 175
+const CARD_OFFSET = 28
 
 let fast = false
 
@@ -26,16 +27,17 @@ class Card {
         this.draggable = true
         this.focus = 0
 
+        this.handlers = {
+            mousemove: undefined,
+            mouseup: undefined
+        }
+
         this.generate_card()
     }
 
-    attach(e, move = true, x = 0, y = 0) {
-        let focus = e.focus
-        let mousemove = e.drag
-        let mouseup = e.lift
-
-        this.col = e
-        this.parent = e.element
+    attach(column, move = true, x = 0, y = 0) {
+        this.col = column
+        this.parent = column.element
         this.parent.appendChild(this.card)
 
         this.initial = [
@@ -43,37 +45,46 @@ class Card {
                 this.parent.getBoundingClientRect().width -
                 this.card.getBoundingClientRect().width
             ) / 2),
-            y + 28 * (e.count - 1) + BIN_OFFSET + 10
+            y + CARD_OFFSET * (this.col.count - 1) + BIN_OFFSET + 10
         ]
 
-        if (move) {
-            this.x = this.initial[0]
-            this.y = this.initial[1]
+        if (move)
+            [this.x, this.y] = this.initial
+
+        this.focus = this.z = column.focus
+
+        this.handlers = {
+            mousemove: column.drag,
+            mouseup: column.lift
         }
 
-        this.focus = focus
-        this.z = focus
-        this._mousemove = mousemove
-        this._mouseup = mouseup
-
-        if (this._mousemove != undefined)
-            this.drag.add_hook("mousemove", this._mousemove)
+        if (this.handlers.mousemove != undefined)
+            this.drag.add_hook("mousemove", this.handlers.mousemove)
     }
 
     detach() {
-        if (this.parent == undefined) return
+        if (this.parent == undefined)
+            return
 
         this.parent.removeChild(this.card)
-        this.drag.remove_hook("mousemove", this._mousemove)
+        this.drag.remove_hook("mousemove", this.handlers.mousemove)
+
         this.initial = [0, 0]
-        this._mousemove = undefined
+        this.handlers.mousemove = undefined
     }
 
     move(col, verify = false, offset_x = 0, offset_y = 0) {
-        if (col instanceof Column && col.element != this.parent && (!verify || col.verify(this))) {
+        if (!(col instanceof Column))
+            return false
+
+        if (!verify || col.verify(this)) {
+            let slide = col.element != this.parent.element
+
             this.col.remove(this)
             col.add(this, false, offset_x, offset_y)
-            this.slide()(...this.initial, this.focus)
+
+            if (slide)
+                this.slide.bind(this)(...this.initial, this.focus)
 
             return true
         }
@@ -82,43 +93,41 @@ class Card {
     }
 
     reattach() {
-        if (this._mouseup) {
-            let ret = this._mouseup()
+        if (this.handlers.mouseup == undefined)
+            return false
 
-            if (ret instanceof Array && ret.length) {
-                let children = this.children.slice()
-                let move_success = this.move(ret[0], true)
+        let cols = this.handlers.mouseup()
 
-                if (children.length && move_success)
-                    children.forEach(child => child.move(ret[0], true))
+        if (!cols.length)
+            return false
 
-                return move_success
-            }
-        }
+        let children = this.children.slice()
+        let move_success = this.move(cols[0], true)
 
-        return false
+        if (children.length && move_success)
+            children.forEach(child => child.move(cols[0], true))
+
+        return move_success
     }
 
-    slide() {
-        return (x, y, z) => {
-            let xn = x - this.card.offsetLeft
-            let yn = y - this.card.offsetTop
+    slide(x, y, z) {
+        let xn = x - this.card.offsetLeft
+        let yn = y - this.card.offsetTop
 
-            if ((xn + yn) == 0)
-                return this.z = z
+        if ((xn + yn) == 0)
+            return this.z = z
 
-            this.card.style.transform = `translate(${xn}px,${yn}px)`
-            this.card.style.transition = `transform ${.15 * (fast ? .5 : 1)}s ease`
+        this.card.style.transform = `translate(${xn}px,${yn}px)`
+        this.card.style.transition = `transform ${.15 * (fast ? .5 : 1)}s ease`
 
-            setTimeout(_ => {
-                this.card.style.transform = null
-                this.card.style.transition = null
-                this.card.style.zIndex = z
+        setTimeout(_ => {
+            this.card.style.transform = null
+            this.card.style.transition = null
 
-                this.x = x
-                this.y = y
-            }, (fast ? .5 : 1) * 160)
-        }
+            this.z = z
+            this.x = x
+            this.y = y
+        }, (fast ? .5 : 1) * 130)
     }
 
     generate_card() {
@@ -136,11 +145,11 @@ class Card {
             if (this.reattach())
                 return false
 
-            this.slide()(...this.initial, this.focus)
+            this.slide.bind(this)(...this.initial, this.focus)
 
             if (this.children.length)
                 this.children.forEach(
-                    child => child.slide()(...child.initial, child.focus)
+                    child => child.slide.bind(child)(...child.initial, child.focus)
                 )
 
             return false
@@ -164,7 +173,7 @@ class Card {
 
             this.children.forEach((child, i) => {
                 child.x = this.x
-                child.y = this.y + 28 * (i + 1)
+                child.y = this.y + CARD_OFFSET * (i + 1)
                 child.z = this.z
             })
 
@@ -184,8 +193,10 @@ class Card {
     get z() { return parseInt(this.card.style.zIndex) || 0 }
 
     get children() {
-        if (this.col && this.col.count)
-            return this.col.cards.slice(this.col.cards.indexOf(this) + 1, this.col.count)
+        if (this.col == undefined || !this.col.count)
+            return []
+
+        return this.col.cards.slice(this.col.cards.indexOf(this) + 1, this.col.count)
     }
 }
 
@@ -204,14 +215,15 @@ class Column {
         this.cards = []
     }
 
-    add(v, move, offset_x = 0, offset_y = 0) {
-        if (!(v instanceof Card)) return
+    add(card, move, offset_x = 0, offset_y = 0) {
+        if (!(card instanceof Card))
+            return
 
         for (let card of this.cards)
             card.draggable = false
 
-        this.cards.push(v)
-        v.attach(this, move, offset_x, offset_y)
+        this.cards.push(card)
+        card.attach(this, move, offset_x, offset_y)
 
         this.detect()
     }
@@ -248,19 +260,28 @@ class Column {
 
         let state = true
 
-        if (this.rules[n.number]) {
-            state &= !this.rules[n.number].includes(v.number)
-            state &= !this.rules[n.number].includes("*")
-        }
+        if (this.rules[n.number])
+            state &= !(
+                this.rules[n.number].includes(v.number) ||
+                this.rules[n.number].includes("*")
+            )
 
-        state &= this.rules[v.color] != n.color
-        state &= (parseInt(v.number) || MAX_INT) == (parseInt(n.number) || MAX_INT) - 1
+        state &= this.rules[v.color] != n.color &&
+            (parseInt(v.number) || MAX_INT) == (parseInt(n.number) || MAX_INT) - 1
 
         return state
     }
 
-    get count() { return this.cards.length }
-    get last() { return this.count ? this.cards[this.count - 1] : undefined }
+    get count() {
+        return this.cards.length
+    }
+
+    get last() {
+        if (!this.count)
+            return undefined
+
+        return this.cards[this.count - 1]
+    }
 }
 
 class Tray extends Column {
@@ -283,7 +304,7 @@ class Bin extends Column {
     }
 
     add(v, move, offset_x = 0, offset_y = 0) {
-        super.add(v, move, offset_x, -BIN_OFFSET - this.count * 28 + offset_y)
+        super.add(v, move, offset_x, -BIN_OFFSET - this.count * CARD_OFFSET + offset_y)
         v.drag.remove()
     }
 
@@ -355,17 +376,19 @@ class Shenzhen {
         }
 
         get("fast").addEventListener("change", e => fast = e.target.checked)
-        get("colorblind").addEventListener("change", e =>
-            this.colorblind = e.target.checked
-        )
+        get("colorblind").addEventListener("change", e => this.colorblind = e.target.checked)
     }
 
     generate_cards() {
         let colors = ["red", "green", "black"]
         let cards = [new Card(colors[0], 'f', this.board)]
 
-        for (let i = 0; i < 39; i++)
-            cards.push(new Card(colors[~~(i / 13)], i % 13 + 1, this.board))
+        for (let i = 0; i < 39; i++) {
+            let color = colors[~~(i / 13)]
+            let number = i % 13 + 1
+
+            cards.push(new Card(color, number, this.board))
+        }
 
         for (let j = 39, g = random(39); j > 0; j--, g = random(39))
             [cards[g], cards[j]] = [cards[j], cards[g]]
@@ -408,12 +431,12 @@ class Shenzhen {
     }
 
     lift() {
-        if (this.focused != undefined) {
-            let focused = this.focused
-            this.focused = undefined
+        if (this.focused == undefined)
+            return []
 
-            return this.columns.filter(col => col.element == focused)
-        }
+        let focused = [this.focused, this.focused = undefined][0]
+
+        return this.columns.filter(col => col.element == focused)
     }
 
     check() {
@@ -460,7 +483,7 @@ class Shenzhen {
                     for (let bin of bins) {
                         if (bin.verify(last)) {
                             last.draggable = false
-                            setTimeout(_ => last.move(bin), ((fast ? .5 : 1) * 160) + 5)
+                            setTimeout(_ => last.move(bin), ((fast ? .5 : 1) * 130) + 5)
                             return
                         }
                     }
@@ -554,7 +577,7 @@ class Shenzhen {
             let card = this.columns[this.dragons[dragon][i]].last
             let tray = this.columns[8 + available]
 
-            card.move(tray, false, 0, -tray.count * 28)
+            card.move(tray, false, 0, -tray.count * CARD_OFFSET)
             card.drag.remove()
             card.card.classList.add("flip")
         }
@@ -578,6 +601,19 @@ class Shenzhen {
         this.check()
     }
 
+    reposition() {
+        for (let column of this.columns) {
+            if (!column.count)
+                continue
+
+            for (let card of column.cards)
+                card.x = card.initial[0] = card.parent.offsetLeft + ~~((
+                    card.parent.getBoundingClientRect().width -
+                    card.card.getBoundingClientRect().width
+                ) / 2)
+        }
+    }
+
     set colorblind(v) {
         let red = get("dragon-red")
         let green = get("dragon-green")
@@ -597,3 +633,4 @@ class Shenzhen {
 let game = new Shenzhen()
 
 window.addEventListener("load", game.restart.bind(game))
+window.addEventListener("resize", game.reposition.bind(game))

@@ -25,6 +25,11 @@ $border-3: lighten($default-background, 32.25%);
     max-width: 880px;
     max-height: 640px;
 
+    @media screen and (max-width: 880px) {
+        min-width: 600px;
+        max-width: 600px;
+    }
+
     &,
     & button {
         font-family: $mono;
@@ -86,23 +91,40 @@ $border-3: lighten($default-background, 32.25%);
             align-items: center;
             justify-content: center;
 
-            min-width: 80px;
-
+            min-width: 5rem;
             margin: 0 5px 0 10px;
+
+            @media screen and (max-width: 880px) {
+                max-width: 2rem;
+                min-width: 2rem;
+                max-height: 130px;
+                margin: 0;
+            }
 
             & button {
                 padding: 10px;
-
                 margin: 5px 0;
 
                 min-height: 1rem;
                 min-width: 3rem;
+
+                @media screen and (max-width: 880px) {
+                    padding: 6px;
+
+                    min-width: 2rem;
+                    max-width: 2rem;
+                    margin: 3px 0;
+                }
             }
         }
 
         & #sh-trays,
         & #sh-bins {
             display: flex;
+
+            @media screen and (max-width: 880px) {
+                max-height: 130px;
+            }
 
             & .col {
                 flex: 0 0;
@@ -111,11 +133,20 @@ $border-3: lighten($default-background, 32.25%);
 
                 min-width: 95px;
 
+                @media screen and (max-width: 880px) {
+                    min-width: 70px;
+                    margin: 0 4px;
+                }
+
                 padding: 0;
                 margin: 0 5px;
 
                 &.flower {
                     margin-right: 20px;
+
+                    @media screen and (max-width: 880px) {
+                        margin-right: 0;
+                    }
 
                     &::after {
                         color: lighten($default-background, 50%);
@@ -137,8 +168,11 @@ $border-3: lighten($default-background, 32.25%);
 
         min-height: 440px;
 
-        padding: 10px;
         margin: 12px 2px 22px 2px;
+
+        @media screen and (max-width: 880px) {
+            margin: 12px 1px 0 1px;
+        }
 
         border: 1px solid $border-0;
         border-radius: 3px;
@@ -168,6 +202,20 @@ $border-3: lighten($default-background, 32.25%);
         &::before {
             position: absolute;
             top: .15em; left: .15em;
+        }
+
+        @media screen and (max-width: 880px) {
+            height: 120px;
+            width: 64px;
+            font-size: 1.25rem;
+
+            &::after {
+                bottom: 0.1em;
+            }
+
+            &::before {
+                top: 0.1em;
+            }
         }
 
         @for $i from 1 through 9 {
