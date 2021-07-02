@@ -35,7 +35,7 @@ class Draggable {
             e.preventDefault()
 
             // Only activate on left mouse click
-            if (e.buttons != 1 && typeof e.touches == "undefined")
+            if (e.type != "touchstart" && e.buttons != 1)
                 return
 
             // Don't apply drag twice
@@ -44,7 +44,7 @@ class Draggable {
 
             if (this.hooks.mousedown.length)
                 for (let callback of this.hooks.mousedown)
-                    if (typeof(callback) !== "function" || callback(e))
+                    if (typeof (callback) !== "function" || callback(e))
                         return
 
             this.onmousedown(e)
@@ -83,7 +83,7 @@ class Draggable {
 
             if (this.hooks.mousemove.length)
                 for (let callback of this.hooks.mousemove)
-                    if (typeof(callback) !== "function" || callback(e))
+                    if (typeof (callback) !== "function" || callback(e))
                         return
 
             this.onmousemove(e)
@@ -106,9 +106,9 @@ class Draggable {
         let cx = e.clientX
         let cy = e.clientY
 
-        if (e.type == "touchmove") {
+        if (typeof e.touches != "undefined") {
             cx = e.touches[0].clientX
-            cy = e.touches[1].clientY
+            cy = e.touches[0].clientY
         }
 
         const x = this.parent.offsetLeft - this.previous[0] + cx
