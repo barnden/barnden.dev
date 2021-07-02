@@ -1,9 +1,9 @@
 email: me@barnden.dev
-description: >- # this means to ignore newlines until "baseurl:"
+description: >-
   Brandon G. Nguyen's personal website
-baseurl: "/" # the subpath of your site, e.g. /blog
+baseurl: "/"
 permalink: /:year/:month/:title
-url: "https://barnden.dev" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://barnden.dev"
 linkedin_username: brandon-g-nguyen
 github_username:  barnden
 date_format: "%Y %b %-d"
@@ -39,7 +39,6 @@ plugins:
   - jekyll-minifier
   # - jekyll-paginate-v2
 
-
 # Plugin Settings
 jekyll-minifier:
   uglifier_args:
@@ -57,14 +56,6 @@ jekyll-minifier:
 #     after: 2
 #   indexpage: "index"
 
-# Exclude from processing.
-# The following items will not be processed, by default.
-# Any item listed under the `exclude:` key here will be automatically added to
-# the internal "default list".
-#
-# Excluded items can be processed by explicitly listing the directories or
-# their entries' file path in the `include:` list.
-#
 exclude:
   - node_modules
   - package.json
@@ -76,8 +67,3 @@ exclude:
   - upload.sh
   - Gemfile
   - Gemfile.lock
-#   - node_modules/
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
