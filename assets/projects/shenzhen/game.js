@@ -1,5 +1,4 @@
 const MAX_INT = new Uint32Array(1).fill(-1)[0] + 1
-const BIN_OFFSET = 175
 const CARD_OFFSET = 28
 
 let fast = false
@@ -41,12 +40,20 @@ class Card {
         this.parent.appendChild(this.card)
 
         this.initial = [
-            x + this.parent.offsetLeft + ~~((
+            x +
+            this.parent.offsetLeft + ~~((
                 this.parent.getBoundingClientRect().width -
                 this.card.getBoundingClientRect().width
             ) / 2),
-            y + CARD_OFFSET * (this.col.count - 1) + BIN_OFFSET + 10
+
+            y +
+            CARD_OFFSET * (this.col.count - 1) +
+            (window.innerWidth >= 880 ? 175 : 145)
+            + 10
         ]
+
+        if (column.constructor !== Column)
+            this.initial[1] = 10
 
         if (move)
             [this.x, this.y] = this.initial
@@ -74,22 +81,17 @@ class Card {
     }
 
     move(col, verify = false, offset_x = 0, offset_y = 0) {
-        if (!(col instanceof Column))
+        if (!(col instanceof Column) ||
+            col.element == this.parent.element ||
+            (verify && !col.verify(this))
+        )
             return false
 
-        if (!verify || col.verify(this)) {
-            let slide = col.element != this.parent.element
+        this.col.remove(this)
+        col.add(this, false, offset_x, offset_y)
+        this.slide.bind(this)(...this.initial, this.focus)
 
-            this.col.remove(this)
-            col.add(this, false, offset_x, offset_y)
-
-            if (slide)
-                this.slide.bind(this)(...this.initial, this.focus)
-
-            return true
-        }
-
-        return false
+        return true
     }
 
     reattach() {
@@ -127,7 +129,7 @@ class Card {
             this.z = z
             this.x = x
             this.y = y
-        }, (fast ? .5 : 1) * 130)
+        }, (fast ? .5 : 1) * 160)
     }
 
     generate_card() {
@@ -229,7 +231,8 @@ class Column {
     }
 
     remove(v) {
-        if (!(v instanceof Card)) return
+        if (!(v instanceof Card))
+            return
 
         if (this.cards.includes(v)) {
             this.cards.splice(this.cards.indexOf(v), 1)
@@ -290,7 +293,7 @@ class Tray extends Column {
     }
 
     add(v, move, offset_x = 0, offset_y = 0) {
-        super.add(v, move, offset_x, -BIN_OFFSET + offset_y)
+        super.add(v, move, offset_x, offset_y)
     }
 
     verify(v) {
@@ -304,7 +307,7 @@ class Bin extends Column {
     }
 
     add(v, move, offset_x = 0, offset_y = 0) {
-        super.add(v, move, offset_x, -BIN_OFFSET - this.count * CARD_OFFSET + offset_y)
+        super.add(v, move, offset_x, offset_y)
         v.drag.remove()
     }
 
@@ -330,7 +333,7 @@ class FlowerBin extends Column {
     }
 
     add(v, move) {
-        super.add(v, move, 0, -BIN_OFFSET)
+        super.add(v, move)
         v.drag.remove()
     }
 
@@ -425,7 +428,12 @@ class Shenzhen {
     }
 
     drag(e) {
-        for (let el of document.elementsFromPoint(e.clientX, e.clientY))
+        let coord = [e.clientX, e.clientY]
+
+        if (typeof e.touches != "undefined")
+            coord = [e.touches[0].clientX, e.touches[0].clientY]
+
+        for (let el of document.elementsFromPoint(...coord))
             if (Array.from(el.classList).includes("col") && this.focused != el)
                 this.focused = el
     }
@@ -440,8 +448,6 @@ class Shenzhen {
     }
 
     check() {
-        if (this.moves) return
-
         let empty = 0
         let dragons = {
             "red": [],
@@ -483,7 +489,7 @@ class Shenzhen {
                     for (let bin of bins) {
                         if (bin.verify(last)) {
                             last.draggable = false
-                            setTimeout(_ => last.move(bin), ((fast ? .5 : 1) * 130) + 5)
+                            setTimeout(_ => last.move(bin), ((fast ? .5 : 1) * 160) + 5)
                             return
                         }
                     }
@@ -602,16 +608,20 @@ class Shenzhen {
     }
 
     reposition() {
-        for (let column of this.columns) {
+        this.columns.forEach((column, index) => {
             if (!column.count)
-                continue
+                return
 
-            for (let card of column.cards)
+            for (let card of column.cards) {
                 card.x = card.initial[0] = card.parent.offsetLeft + ~~((
                     card.parent.getBoundingClientRect().width -
                     card.card.getBoundingClientRect().width
                 ) / 2)
-        }
+
+                if (index < 8)
+                    card.y = card.initial[1] = card.y + 30 * ((window.innerWidth >= 880) ? 1 : -1)
+            }
+        })
     }
 
     set colorblind(v) {
@@ -631,6 +641,16 @@ class Shenzhen {
 }
 
 let game = new Shenzhen()
+let last = window.innerWidth >= 880
 
 window.addEventListener("load", game.restart.bind(game))
-window.addEventListener("resize", game.reposition.bind(game))
+window.addEventListener("resize", _ => {
+    if (
+        (last && window.innerWidth <= 880) ||
+        (!last && window.innerWidth >= 880)
+    ) {
+        last = window.innerWidth >= 880
+
+        game.reposition()
+    }
+})
