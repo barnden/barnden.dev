@@ -1,5 +1,7 @@
 const MAX_INT = new Uint32Array(1).fill(-1)[0] + 1
 const CARD_OFFSET = 28
+const CARD_SLIDE_DELAY = 140
+const CARD_TRANSITION_TIME = (CARD_SLIDE_DELAY - 10) / 1000
 
 let fast = false
 
@@ -82,7 +84,7 @@ class Card {
 
     move(col, verify = false, offset_x = 0, offset_y = 0) {
         if (!(col instanceof Column) ||
-            col.element == this.parent.element ||
+            col.element == this.parent ||
             (verify && !col.verify(this))
         )
             return false
@@ -113,23 +115,22 @@ class Card {
     }
 
     slide(x, y, z) {
-        let xn = x - this.card.offsetLeft
-        let yn = y - this.card.offsetTop
+        const xn = x - this.card.offsetLeft
+        const yn = y - this.card.offsetTop
 
         if ((xn + yn) == 0)
             return this.z = z
 
         this.card.style.transform = `translate(${xn}px,${yn}px)`
-        this.card.style.transition = `transform ${.15 * (fast ? .5 : 1)}s ease`
+        this.card.style.transition = `transform ${CARD_TRANSITION_TIME * (fast ? .5 : 1)}s ease`
 
         setTimeout(_ => {
+            [this.x, this.y, this.z] = [x, y, z]
+
             this.card.style.transform = null
             this.card.style.transition = null
 
-            this.z = z
-            this.x = x
-            this.y = y
-        }, (fast ? .5 : 1) * 160)
+        }, (fast ? .5 : 1) * CARD_SLIDE_DELAY)
     }
 
     generate_card() {
@@ -486,13 +487,16 @@ class Shenzhen {
                 // Always move a 1 or 2 to a bin, or whenever the
                 // current card is one above the minimum of all 3 bins
                 if (last.number <= 2 || last.number == min + 1)
-                    for (let bin of bins) {
+                    for (let bin of bins)
                         if (bin.verify(last)) {
                             last.draggable = false
-                            setTimeout(_ => last.move(bin), ((fast ? .5 : 1) * 160) + 5)
+
+                            setTimeout(_ => last.move(bin),
+                                ((fast ? .5 : 1) * CARD_SLIDE_DELAY) + 5
+                            )
+
                             return
                         }
-                    }
             }
         }
 
