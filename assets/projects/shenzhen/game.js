@@ -262,9 +262,12 @@ class Column {
         let state = true
 
         if (this.rules[n.number])
-            state &= this.rules[n.number].some(e => [v.number, "*"].includes(e))
+            state &= !(
+                this.rules[n.number].includes(v.number) ||
+                this.rules[n.number].includes("*")
+            )
 
-        state &= !this.rules[v.color].includes(n.color) &&
+        state &= this.rules[v.color] != n.color &&
             (parseInt(v.number) || MAX_INT) == (parseInt(n.number) || MAX_INT) - 1
 
         return state
@@ -363,14 +366,14 @@ class Shenzhen {
 
         this.rules = {
             // rules define the set of exclusions
-            "red": ["red"],
-            "green": ["green"],
-            "black": ["black"],
-            "f": ["*"],
-            "10": ["*"],
-            "11": ["*"],
-            "12": ["*"],
-            "13": ["*"],
+            "red": "red",
+            "green": "green",
+            "black": "black",
+            "f": "*",
+            "10": "*",
+            "11": "*",
+            "12": "*",
+            "13": "*",
         }
 
         get("fast").addEventListener("change", e => fast = e.target.checked)
