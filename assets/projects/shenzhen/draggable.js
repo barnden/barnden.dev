@@ -3,7 +3,7 @@ class Draggable {
         if (!(draggable instanceof HTMLElement))
             throw "[Drag] Excpected HTMLElement for drag."
 
-        if (parent == undefined)
+        if (!(parent instanceof HTMLElement))
             parent = draggable
 
         this.prev = [0, 0]
@@ -19,12 +19,30 @@ class Draggable {
         this.setup()
     }
 
+    static getCoordinates(e) {
+        const coords = (typeof (e.touches) === "undefined") ? e : e.touches[0]
+
+        return [coords.clientX, coords.clientY]
+    }
+
     setup() {
         this.draggable.addEventListener("mousedown", this.start())
         this.draggable.addEventListener("touchstart", this.start())
 
         document.addEventListener("mouseup", this.stop())
         document.addEventListener("touchend", this.stop())
+    }
+
+    executeHooks(event, data) {
+        let error = false
+
+        // TODO: Should we early exit if error?
+        if (this.hooks.hasOwnProperty(event) && this.hooks[event].length)
+            for (let hook of this.hooks[event])
+                if (typeof (hook) === "function")
+                    error |= hook(data)
+
+        return error
     }
 
     start() {
@@ -42,10 +60,8 @@ class Draggable {
             if (this.parent.hasAttribute("data-dragged"))
                 return
 
-            if (this.hooks.mousedown.length)
-                for (let callback of this.hooks.mousedown)
-                    if (typeof (callback) !== "function" || callback(e))
-                        return
+            if (this.executeHooks("mousedown", e))
+                return
 
             this.onmousedown(e)
         }
@@ -58,17 +74,15 @@ class Draggable {
             return this.stop_handler
 
         this.stop_handler = e => {
-            if (this.parent.hasAttribute("data-dragged")) {
-                if (this.hooks.mouseup.length)
-                    for (let callback of this.hooks.mouseup)
-                        if (typeof (callback) === "function")
-                            callback(e)
+            if (!this.parent.hasAttribute("data-dragged"))
+                return
 
-                this.parent.removeAttribute("data-dragged")
+            this.executeHooks("mouseup", e)
 
-                document.removeEventListener("mousemove", this.drag())
-                document.removeEventListener("touchmove", this.drag())
-            }
+            this.parent.removeAttribute("data-dragged")
+
+            document.removeEventListener("mousemove", this.drag())
+            document.removeEventListener("touchmove", this.drag())
         }
 
         return this.stop_handler
@@ -81,10 +95,8 @@ class Draggable {
         this.drag_handler = e => {
             e.preventDefault()
 
-            if (this.hooks.mousemove.length)
-                for (let callback of this.hooks.mousemove)
-                    if (typeof (callback) !== "function" || callback(e))
-                        return
+            if (this.executeHooks("mousemove", e))
+                return
 
             this.onmousemove(e)
         }
@@ -93,9 +105,7 @@ class Draggable {
     }
 
     onmousedown(e) {
-        this.previous = e.type == "touchstart" ?
-            [e.touches[0].clientX, e.touches[0].clientY] :
-            [e.clientX, e.clientY]
+        this.previous = Draggable.getCoordinates(e)
         this.parent.setAttribute("data-dragged", "data-dragged")
 
         document.addEventListener("mousemove", this.drag())
@@ -103,23 +113,13 @@ class Draggable {
     }
 
     onmousemove(e) {
-        let cx = e.clientX
-        let cy = e.clientY
-
-        if (typeof e.touches != "undefined") {
-            cx = e.touches[0].clientX
-            cy = e.touches[0].clientY
-        }
-
+        const [cx, cy] = Draggable.getCoordinates(e)
         const x = this.parent.offsetLeft - this.previous[0] + cx
         const y = this.parent.offsetTop - this.previous[1] + cy
 
-        let left = x + "px"
-        let top = y + "px"
-
         this.previous = [cx, cy]
-        this.parent.style.left = left
-        this.parent.style.top = top
+        this.parent.style.left = x + "px"
+        this.parent.style.top = y + "px"
     }
 
     remove(hooks = true) {
@@ -130,6 +130,7 @@ class Draggable {
 
         this.draggable.removeEventListener("mousedown", this.start())
         this.draggable.removeEventListener("touchstart", this.start())
+
         document.removeEventListener("mouseup", this.stop())
         document.removeEventListener("touchend", this.stop())
         document.removeEventListener("mousemove", this.drag())

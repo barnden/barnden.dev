@@ -141,9 +141,6 @@ class Card {
         card.classList.add(this.color)
         card.classList.add("card-" + this.number)
 
-        if (this.container)
-            drag.container = this.container
-
         drag.add_hook("mouseup", _ => {
             if (this.reattach())
                 return false
@@ -162,7 +159,7 @@ class Card {
             if (!this.draggable)
                 return true
 
-            this.z++
+            this.z = 1
 
             if (this.children.length)
                 this.children.forEach(child => child.z++)
@@ -265,12 +262,9 @@ class Column {
         let state = true
 
         if (this.rules[n.number])
-            state &= !(
-                this.rules[n.number].includes(v.number) ||
-                this.rules[n.number].includes("*")
-            )
+            state &= this.rules[n.number].some(e => [v.number, "*"].includes(e))
 
-        state &= this.rules[v.color] != n.color &&
+        state &= !this.rules[v.color].includes(n.color) &&
             (parseInt(v.number) || MAX_INT) == (parseInt(n.number) || MAX_INT) - 1
 
         return state
@@ -369,14 +363,14 @@ class Shenzhen {
 
         this.rules = {
             // rules define the set of exclusions
-            "red": "red",
-            "green": "green",
-            "black": "black",
-            "f": "*",
-            "10": "*",
-            "11": "*",
-            "12": "*",
-            "13": "*",
+            "red": ["red"],
+            "green": ["green"],
+            "black": ["black"],
+            "f": ["*"],
+            "10": ["*"],
+            "11": ["*"],
+            "12": ["*"],
+            "13": ["*"],
         }
 
         get("fast").addEventListener("change", e => fast = e.target.checked)
@@ -388,8 +382,8 @@ class Shenzhen {
         let cards = [new Card(colors[0], 'f', this.board)]
 
         for (let i = 0; i < 39; i++) {
-            let color = colors[~~(i / 13)]
-            let number = i % 13 + 1
+            const color = colors[~~(i / 13)]
+            const number = i % 13 + 1
 
             cards.push(new Card(color, number, this.board))
         }
@@ -429,14 +423,12 @@ class Shenzhen {
     }
 
     drag(e) {
-        let coord = [e.clientX, e.clientY]
+        const point = Draggable.getCoordinates(e)
+        const elements = document.elementsFromPoint(...point)
 
-        if (typeof e.touches != "undefined")
-            coord = [e.touches[0].clientX, e.touches[0].clientY]
-
-        for (let el of document.elementsFromPoint(...coord))
-            if (Array.from(el.classList).includes("col") && this.focused != el)
-                this.focused = el
+        for (let element of elements)
+            if (Array.from(element.classList).includes("col") && this.focused != element)
+                this.focused = element
     }
 
     lift() {

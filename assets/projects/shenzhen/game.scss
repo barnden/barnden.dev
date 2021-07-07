@@ -26,6 +26,7 @@ $border-3: lighten($default-background, 32.25%);
     border: 1px solid $border-1;
 
     touch-action: none;
+    user-select: none;
 
     @media screen and (max-width: 880px) {
         min-width: 600px;
@@ -175,7 +176,7 @@ $border-3: lighten($default-background, 32.25%);
         align-items: center;
         justify-content: center;
 
-        min-height: 440px;
+        min-height: 474px;
 
         margin: 12px 2px 22px 2px;
 
