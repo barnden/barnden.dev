@@ -1,10 +1,13 @@
 class Draggable {
-    constructor(draggable, parent) {
+    constructor(draggable, parent, container) {
         if (!(draggable instanceof HTMLElement))
             throw "[Drag] Excpected HTMLElement for drag."
 
         if (!(parent instanceof HTMLElement))
             parent = draggable
+
+        if (container instanceof HTMLElement)
+            this.container = container
 
         this.prev = [0, 0]
         this.draggable = draggable
@@ -117,9 +120,43 @@ class Draggable {
         const x = this.parent.offsetLeft - this.previous[0] + cx
         const y = this.parent.offsetTop - this.previous[1] + cy
 
-        this.previous = [cx, cy]
-        this.parent.style.left = x + "px"
-        this.parent.style.top = y + "px"
+        let left = x
+        let top = y
+
+        if (this.container instanceof HTMLElement) {
+            const box = this.parent.getBoundingClientRect()
+            const container = this.container.getBoundingClientRect()
+            const collision = this.detect(x, y)
+
+            switch (collision & 5) {
+                case 0:
+                    this.previous[0] = cx
+                    break
+                case 1:
+                    left = 0
+                    break
+                case 4:
+                    left = container.width - box.width - 1
+                    break
+            }
+
+            switch (collision & 10) {
+                case 0:
+                    this.previous[1] = cy
+                    break
+                case 2:
+                    top = container.height - box.height - 1
+                    break
+                case 8:
+                    top = 0
+                    break
+            }
+        } else {
+            this.previous = [cx, cy]
+        }
+
+        this.parent.style.left = `${left}px`
+        this.parent.style.top = `${top}px`
     }
 
     remove(hooks = true) {
@@ -135,6 +172,26 @@ class Draggable {
         document.removeEventListener("touchend", this.stop())
         document.removeEventListener("mousemove", this.drag())
         document.removeEventListener("touchmove", this.drag())
+    }
+
+    detect(x, y) {
+        if (this.container == undefined)
+            return 0
+
+        const container = this.container.getBoundingClientRect()
+        const box = this.parent.getBoundingClientRect()
+
+        if (typeof (x) === "undefined" || typeof (y) === "undefined") {
+            x = box.left - container.left
+            y = box.top - container.top
+        }
+
+        const top = y < 0
+        const right = x > (container.width - box.width)
+        const bottom = y > (container.height - box.height)
+        const left = x < 0
+
+        return +top << 3 | +right << 2 | +bottom << 1 | +left
     }
 
     add_hook(event, callback) {

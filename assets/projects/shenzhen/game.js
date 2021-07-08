@@ -100,13 +100,13 @@ class Card {
         if (this.handlers.mouseup == undefined)
             return false
 
-        let cols = this.handlers.mouseup()
+        const cols = this.handlers.mouseup()
 
         if (!cols.length)
             return false
 
-        let children = this.children.slice()
-        let move_success = this.move(cols[0], true)
+        const children = this.children.slice()
+        const move_success = this.move(cols[0], true)
 
         if (children.length && move_success)
             children.forEach(child => child.move(cols[0], true))
@@ -129,13 +129,12 @@ class Card {
 
             this.card.style.transform = null
             this.card.style.transition = null
-
         }, (fast ? .5 : 1) * CARD_SLIDE_DELAY)
     }
 
     generate_card() {
         let card = document.createElement("div")
-        let drag = new Draggable(card)
+        let drag = new Draggable(card, undefined, this.container)
 
         card.classList.add("card")
         card.classList.add(this.color)
